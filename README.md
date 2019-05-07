@@ -72,7 +72,7 @@ The following arguments are supported:
 Example:
 
 ```
-resource "ironio_push_queue" "test" {
+resource "ironio_push_queue" "example" {
     name = "example_push"
 
     error_queue = "example_push_error"
