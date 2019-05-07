@@ -39,8 +39,7 @@ func Provider() *schema.Provider {
 			},
 			"project_id": {
 				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "",
+				Required:    true,
 				Description: "The project id",
 			},
 			"protocol": {
@@ -51,8 +50,7 @@ func Provider() *schema.Provider {
 			},
 			"token": {
 				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "",
+				Required:    true,
 				Description: "The token",
 			},
 		},
