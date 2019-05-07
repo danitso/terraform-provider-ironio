@@ -69,6 +69,37 @@ The following arguments are supported:
     * `url` - (Required) This is the URL for the subscriber.
     * `headers` - (Optional) This is the headers to include when sending a message to the subscriber. Defaults to `{}`.
 
+Example:
+
+```
+resource "ironio_push_queue" "test" {
+    name = "example_push"
+
+    error_queue = "example_push_error"
+    multicast = true
+    retries = 3
+    retries_delay = 60
+
+    subscriber {
+        name = "example_push_subscriber_1"
+        url = "https://subscriber1.domain.tld"
+
+        headers {
+            "X-Project-Name" = "example"
+        }
+    }
+
+    subscriber {
+        name = "example_push_subscriber_2"
+        url = "https://subscriber2.domain.tld"
+
+        headers {
+            "X-Project-Name" = "example"
+        }
+    }
+}
+```
+
 Developing the Provider
 ---------------------------
 
