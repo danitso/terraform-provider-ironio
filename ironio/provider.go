@@ -9,7 +9,7 @@ import (
 	"github.com/iron-io/iron_go3/config"
 )
 
-// Provider() returns the object for this provider.
+// Provider returns the object for this provider.
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		ConfigureFunc: providerConfigure,
@@ -57,54 +57,54 @@ func Provider() *schema.Provider {
 	}
 }
 
-// providerConfigure() configures the provider before processing any IronMQ resources.
+// providerConfigure configures the provider before processing any IronMQ resources.
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
-	var client_settings config.Settings
+	var clientSettings config.Settings
 
-	load_config_file := d.Get("load_config_file").(bool)
+	loadConfigFile := d.Get("load_config_file").(bool)
 
-	if load_config_file {
+	if loadConfigFile {
 		// Use the settings stored in the configuration file or the environment variables.
-		client_settings = config.Config("iron_mq")
+		clientSettings = config.Config("iron_mq")
 	} else {
 		// Initialize the settings struct with the IronMQ preset.
-		preset_settings := config.Presets["mq"]
-		client_settings.UseSettings(&preset_settings)
+		presetSettings := config.Presets["mq"]
+		clientSettings.UseSettings(&presetSettings)
 
 		// Retrieve the provider configuration and update the IronMQ settings accordingly.
 		host := d.Get("host").(string)
 		port := uint16(d.Get("port").(int))
-		project_id := d.Get("project_id").(string)
+		projectID := d.Get("project_id").(string)
 		protocol := d.Get("protocol").(string)
 		token := d.Get("token").(string)
 
 		if host != "" {
-			client_settings.Host = host
+			clientSettings.Host = host
 		}
 
 		if port != 0 {
-			client_settings.Port = port
+			clientSettings.Port = port
 		}
 
-		if project_id != "" {
-			client_settings.ProjectId = project_id
+		if projectID != "" {
+			clientSettings.ProjectId = projectID
 		} else {
 			return nil, fmt.Errorf("The IronMQ project id is undefined")
 		}
 
 		if protocol != "" {
-			client_settings.Scheme = protocol
+			clientSettings.Scheme = protocol
 		}
 
 		if token != "" {
-			client_settings.Token = token
+			clientSettings.Token = token
 		} else {
 			return nil, fmt.Errorf("The IronMQ token is undefined")
 		}
 	}
 
 	// Change the user agent in order to notify about the use of this provider.
-	client_settings.UserAgent = fmt.Sprintf(
+	clientSettings.UserAgent = fmt.Sprintf(
 		"%s/%s Go/%s Terraform-Library/%s",
 		TerraformProviderName,
 		TerraformProviderVersion,
@@ -112,5 +112,5 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		version.Version,
 	)
 
-	return client_settings, nil
+	return clientSettings, nil
 }

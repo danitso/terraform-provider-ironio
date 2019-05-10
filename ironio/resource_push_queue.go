@@ -129,22 +129,22 @@ func resourcePushQueueBuildInfo(d *schema.ResourceData) (mq.QueueInfo, error) {
 
 // resourcePushQueueCreate() creates a new push queue.
 func resourcePushQueueCreate(d *schema.ResourceData, m interface{}) error {
-	client_settings := m.(config.Settings)
+	clientSettings := m.(config.Settings)
 
-	queue_name := d.Get("name").(string)
-	queue_info, err := resourcePushQueueBuildInfo(d)
-
-	if err != nil {
-		return err
-	}
-
-	_, err = mq.ConfigCreateQueue(queue_info, &client_settings)
+	queueName := d.Get("name").(string)
+	queueInfo, err := resourcePushQueueBuildInfo(d)
 
 	if err != nil {
 		return err
 	}
 
-	d.SetId(queueNameToId(client_settings.ProjectId, queue_name))
+	_, err = mq.ConfigCreateQueue(queueInfo, &clientSettings)
+
+	if err != nil {
+		return err
+	}
+
+	d.SetId(queueNameToID(clientSettings.ProjectId, queueName))
 
 	return resourcePushQueueRead(d, m)
 }

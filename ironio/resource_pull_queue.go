@@ -29,38 +29,38 @@ func resourcePullQueue() *schema.Resource {
 
 // resourcePullQueueCreate() creates a new pull queue.
 func resourcePullQueueCreate(d *schema.ResourceData, m interface{}) error {
-	client_settings, ok := m.(config.Settings)
+	clientSettings, ok := m.(config.Settings)
 
 	if !ok {
 		return fmt.Errorf("Failed to retrieve the client settings")
 	}
 
-	queue_name := d.Get("name").(string)
-	queue_info := mq.QueueInfo{
-		Name: queue_name,
+	queueName := d.Get("name").(string)
+	queueInfo := mq.QueueInfo{
+		Name: queueName,
 		Type: "pull",
 	}
-	_, err := mq.ConfigCreateQueue(queue_info, &client_settings)
+	_, err := mq.ConfigCreateQueue(queueInfo, &clientSettings)
 
 	if err != nil {
 		return err
 	}
 
-	d.SetId(queueNameToId(client_settings.ProjectId, queue_name))
+	d.SetId(queueNameToID(clientSettings.ProjectId, queueName))
 
 	return resourcePullQueueRead(d, m)
 }
 
-// resourcePullQueueRead() reads information about an existing pull queue.
+// resourcePullQueueRead reads information about an existing pull queue.
 func resourcePullQueueRead(d *schema.ResourceData, m interface{}) error {
-	client_settings, ok := m.(config.Settings)
+	clientSettings, ok := m.(config.Settings)
 
 	if !ok {
 		return fmt.Errorf("Failed to retrieve the client settings")
 	}
 
-	queue_name := d.Get("name").(string)
-	queue := mq.ConfigNew(queue_name, &client_settings)
+	queueName := d.Get("name").(string)
+	queue := mq.ConfigNew(queueName, &clientSettings)
 	_, err := queue.Info()
 
 	if err != nil {
@@ -68,9 +68,8 @@ func resourcePullQueueRead(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 
 			return nil
-		} else {
-			return err
 		}
+		return err
 	}
 
 	return nil
@@ -78,14 +77,14 @@ func resourcePullQueueRead(d *schema.ResourceData, m interface{}) error {
 
 // resourcePullQueueDelete() deletes an existing pull queue.
 func resourcePullQueueDelete(d *schema.ResourceData, m interface{}) error {
-	client_settings, ok := m.(config.Settings)
+	clientSettings, ok := m.(config.Settings)
 
 	if !ok {
 		return fmt.Errorf("Failed to retrieve the client settings")
 	}
 
-	queue_name := d.Get("name").(string)
-	queue := mq.ConfigNew(queue_name, &client_settings)
+	queueName := d.Get("name").(string)
+	queue := mq.ConfigNew(queueName, &clientSettings)
 	err := queue.Delete()
 
 	if err != nil {

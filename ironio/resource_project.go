@@ -13,13 +13,13 @@ import (
 
 // ProjectInfo describes a project.
 type ProjectInfo struct {
-	Id        string    `json:"id,omitempty"`
+	ID        string    `json:"id,omitempty"`
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	TenantId  int       `json:"tenant_id,omitempty"`
+	TenantID  int       `json:"tenant_id,omitempty"`
 	Name      string    `json:"name"`
 	Status    string    `json:"status,omitempty"`
-	UserId    string    `json:"user_id,omitempty"`
+	UserID    string    `json:"user_id,omitempty"`
 }
 
 // ProjectRequest describes a project request payload.
@@ -47,7 +47,7 @@ func resourceProject() *schema.Resource {
 
 // resourceProjectCreate() creates a project.
 func resourceProjectCreate(d *schema.ResourceData, m interface{}) error {
-	client_settings := m.(config.Settings)
+	clientSettings := m.(config.Settings)
 	project := ProjectInfo{
 		Name: d.Get("name").(string),
 	}
@@ -58,14 +58,14 @@ func resourceProjectCreate(d *schema.ResourceData, m interface{}) error {
 
 	var out ProjectInfo
 
-	url := resourceProjectGetEndpoint(client_settings, "")
+	url := resourceProjectGetEndpoint(clientSettings, "")
 	err := url.Req("POST", in, &out)
 
 	if err != nil {
 		return err
 	}
 
-	d.SetId(out.Id)
+	d.SetId(out.ID)
 
 	return nil
 }
@@ -84,13 +84,13 @@ func resourceProjectGetEndpoint(cs config.Settings, id string) *api.URL {
 	return u
 }
 
-// resourceProjectRead() reads information about an existing project.
+// resourceProjectRead reads information about an existing project.
 func resourceProjectRead(d *schema.ResourceData, m interface{}) error {
-	client_settings := m.(config.Settings)
+	clientSettings := m.(config.Settings)
 
 	var out ProjectInfo
 
-	url := resourceProjectGetEndpoint(client_settings, d.Id())
+	url := resourceProjectGetEndpoint(clientSettings, d.Id())
 	err := url.Req("GET", nil, &out)
 
 	if err != nil {
@@ -98,9 +98,8 @@ func resourceProjectRead(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 
 			return nil
-		} else {
-			return err
 		}
+		return err
 	}
 
 	d.Set("name", out.Name)
@@ -108,9 +107,9 @@ func resourceProjectRead(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-// resourceProjectUpdate() updates an existing project.
+// resourceProjectUpdate updates an existing project.
 func resourceProjectUpdate(d *schema.ResourceData, m interface{}) error {
-	client_settings := m.(config.Settings)
+	clientSettings := m.(config.Settings)
 	project := ProjectInfo{
 		Name: d.Get("name").(string),
 	}
@@ -121,7 +120,7 @@ func resourceProjectUpdate(d *schema.ResourceData, m interface{}) error {
 
 	var out ProjectInfo
 
-	url := resourceProjectGetEndpoint(client_settings, d.Id())
+	url := resourceProjectGetEndpoint(clientSettings, d.Id())
 	err := url.Req("PATCH", in, &out)
 
 	if err != nil {
@@ -131,15 +130,15 @@ func resourceProjectUpdate(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-// resourceProjectDelete() deletes an existing project.
+// resourceProjectDelete deletes an existing project.
 func resourceProjectDelete(d *schema.ResourceData, m interface{}) error {
-	client_settings := m.(config.Settings)
+	clientSettings := m.(config.Settings)
 
 	var out struct {
 		Message string `json:"msg"`
 	}
 
-	url := resourceProjectGetEndpoint(client_settings, d.Id())
+	url := resourceProjectGetEndpoint(clientSettings, d.Id())
 	err := url.Req("DELETE", nil, &out)
 
 	if err != nil {
