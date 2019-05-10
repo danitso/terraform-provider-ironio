@@ -1,4 +1,4 @@
-package ironio
+package main
 
 import "testing"
 
@@ -47,10 +47,6 @@ func TestProviderRequiredOptionalValues(t *testing.T) {
 
 	if s.Schema["port"].Optional != true {
 		t.Fatalf("error in Provider.Schema, port Optional value has changed")
-	}
-
-	if s.Schema["project_id"].Required != true {
-		t.Fatalf("error in Provider.Schema, project_id Optional value has changed")
 	}
 
 	if s.Schema["protocol"].Optional != true {

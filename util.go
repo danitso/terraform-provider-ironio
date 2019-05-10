@@ -1,4 +1,4 @@
-package ironio
+package main
 
 import (
 	"strings"

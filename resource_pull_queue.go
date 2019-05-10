@@ -1,7 +1,6 @@
-package ironio
+package main
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
@@ -19,6 +18,12 @@ func resourcePullQueue() *schema.Resource {
 				Description: "The name of the queue",
 				ForceNew:    true,
 			},
+			"project_id": &schema.Schema{
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The project id",
+				ForceNew:    true,
+			},
 		},
 
 		Create: resourcePullQueueCreate,
@@ -29,38 +34,43 @@ func resourcePullQueue() *schema.Resource {
 
 // resourcePullQueueCreate() creates a new pull queue.
 func resourcePullQueueCreate(d *schema.ResourceData, m interface{}) error {
-	clientSettings, ok := m.(config.Settings)
+	clientSettings := m.(ClientSettings)
+	clientSettingsMQ := config.Settings{}
+	clientSettingsMQ.UseSettings(&clientSettings.MQ)
 
-	if !ok {
-		return fmt.Errorf("Failed to retrieve the client settings")
-	}
-
+	projectID := d.Get("project_id").(string)
 	queueName := d.Get("name").(string)
+
+	clientSettingsMQ.ProjectId = projectID
 	queueInfo := mq.QueueInfo{
 		Name: queueName,
 		Type: "pull",
 	}
-	_, err := mq.ConfigCreateQueue(queueInfo, &clientSettings)
+	_, err := mq.ConfigCreateQueue(queueInfo, &clientSettingsMQ)
 
 	if err != nil {
 		return err
 	}
 
-	d.SetId(queueNameToID(clientSettings.ProjectId, queueName))
+	d.SetId(queueNameToID(clientSettingsMQ.ProjectId, queueName))
 
 	return resourcePullQueueRead(d, m)
 }
 
 // resourcePullQueueRead reads information about an existing pull queue.
 func resourcePullQueueRead(d *schema.ResourceData, m interface{}) error {
-	clientSettings, ok := m.(config.Settings)
+	clientSettings := m.(ClientSettings)
+	clientSettingsMQ := config.Settings{}
+	clientSettingsMQ.UseSettings(&clientSettings.MQ)
 
-	if !ok {
-		return fmt.Errorf("Failed to retrieve the client settings")
+	projectID := d.State().Attributes["project_id"]
+	queueName := d.State().Attributes["name"]
+
+	if projectID != "" {
+		clientSettingsMQ.ProjectId = projectID
 	}
 
-	queueName := d.Get("name").(string)
-	queue := mq.ConfigNew(queueName, &clientSettings)
+	queue := mq.ConfigNew(queueName, &clientSettingsMQ)
 	_, err := queue.Info()
 
 	if err != nil {
@@ -77,14 +87,18 @@ func resourcePullQueueRead(d *schema.ResourceData, m interface{}) error {
 
 // resourcePullQueueDelete() deletes an existing pull queue.
 func resourcePullQueueDelete(d *schema.ResourceData, m interface{}) error {
-	clientSettings, ok := m.(config.Settings)
+	clientSettings := m.(ClientSettings)
+	clientSettingsMQ := config.Settings{}
+	clientSettingsMQ.UseSettings(&clientSettings.MQ)
 
-	if !ok {
-		return fmt.Errorf("Failed to retrieve the client settings")
+	projectID := d.State().Attributes["project_id"]
+	queueName := d.State().Attributes["name"]
+
+	if projectID != "" {
+		clientSettingsMQ.ProjectId = projectID
 	}
 
-	queueName := d.Get("name").(string)
-	queue := mq.ConfigNew(queueName, &clientSettings)
+	queue := mq.ConfigNew(queueName, &clientSettingsMQ)
 	err := queue.Delete()
 
 	if err != nil {

@@ -1,6 +1,7 @@
-package ironio
+package main
 
 import (
+	"errors"
 	"fmt"
 	"net/url"
 	"strings"
@@ -13,18 +14,19 @@ import (
 
 // ProjectInfo describes a project.
 type ProjectInfo struct {
-	ID        string    `json:"id,omitempty"`
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	TenantID  int       `json:"tenant_id,omitempty"`
-	Name      string    `json:"name"`
-	Status    string    `json:"status,omitempty"`
-	UserID    string    `json:"user_id,omitempty"`
+	ID        string     `json:"id,omitempty"`
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+	TenantID  int        `json:"tenant_id,omitempty"`
+	Name      string     `json:"name,omitempty"`
+	Status    string     `json:"status,omitempty"`
+	UserID    string     `json:"user_id,omitempty"`
 }
 
-// ProjectRequest describes a project request payload.
-type ProjectRequest struct {
-	Project ProjectInfo `json:"project"`
+// ProjectBody describes a project request payload.
+type ProjectBody struct {
+	Project ProjectInfo `json:"project,omitempty"`
+	Message string      `json:"msg,omitempty"`
 }
 
 // resourceProject() manages projects.
@@ -47,25 +49,28 @@ func resourceProject() *schema.Resource {
 
 // resourceProjectCreate() creates a project.
 func resourceProjectCreate(d *schema.ResourceData, m interface{}) error {
-	clientSettings := m.(config.Settings)
-	project := ProjectInfo{
+	clientSettings := m.(ClientSettings)
+	clientSettingsAuth := config.Settings{}
+	clientSettingsAuth.UseSettings(&clientSettings.Auth)
+
+	in := ProjectInfo{
 		Name: d.Get("name").(string),
 	}
 
-	in := ProjectRequest{
-		Project: project,
-	}
+	var out ProjectBody
 
-	var out ProjectInfo
-
-	url := resourceProjectGetEndpoint(clientSettings, "")
+	url := resourceProjectGetEndpoint(clientSettingsAuth, "")
 	err := url.Req("POST", in, &out)
 
 	if err != nil {
 		return err
 	}
 
-	d.SetId(out.ID)
+	if out.Project.ID == "" {
+		return fmt.Errorf("Failed to retrieve the project id for \"%s\"", in.Name)
+	}
+
+	d.SetId(out.Project.ID)
 
 	return nil
 }
@@ -86,11 +91,13 @@ func resourceProjectGetEndpoint(cs config.Settings, id string) *api.URL {
 
 // resourceProjectRead reads information about an existing project.
 func resourceProjectRead(d *schema.ResourceData, m interface{}) error {
-	clientSettings := m.(config.Settings)
+	clientSettings := m.(ClientSettings)
+	clientSettingsAuth := config.Settings{}
+	clientSettingsAuth.UseSettings(&clientSettings.Auth)
 
-	var out ProjectInfo
+	var out ProjectBody
 
-	url := resourceProjectGetEndpoint(clientSettings, d.Id())
+	url := resourceProjectGetEndpoint(clientSettingsAuth, d.Id())
 	err := url.Req("GET", nil, &out)
 
 	if err != nil {
@@ -102,25 +109,28 @@ func resourceProjectRead(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	d.Set("name", out.Name)
+	if out.Project.Name == "" {
+		return errors.New("Failed to retrieve the project name")
+	}
+
+	d.Set("name", out.Project.Name)
 
 	return nil
 }
 
 // resourceProjectUpdate updates an existing project.
 func resourceProjectUpdate(d *schema.ResourceData, m interface{}) error {
-	clientSettings := m.(config.Settings)
-	project := ProjectInfo{
+	clientSettings := m.(ClientSettings)
+	clientSettingsAuth := config.Settings{}
+	clientSettingsAuth.UseSettings(&clientSettings.Auth)
+
+	in := ProjectInfo{
 		Name: d.Get("name").(string),
 	}
 
-	in := ProjectRequest{
-		Project: project,
-	}
+	var out ProjectBody
 
-	var out ProjectInfo
-
-	url := resourceProjectGetEndpoint(clientSettings, d.Id())
+	url := resourceProjectGetEndpoint(clientSettingsAuth, d.Id())
 	err := url.Req("PATCH", in, &out)
 
 	if err != nil {
@@ -132,13 +142,13 @@ func resourceProjectUpdate(d *schema.ResourceData, m interface{}) error {
 
 // resourceProjectDelete deletes an existing project.
 func resourceProjectDelete(d *schema.ResourceData, m interface{}) error {
-	clientSettings := m.(config.Settings)
+	clientSettings := m.(ClientSettings)
+	clientSettingsAuth := config.Settings{}
+	clientSettingsAuth.UseSettings(&clientSettings.Auth)
 
-	var out struct {
-		Message string `json:"msg"`
-	}
+	var out ProjectBody
 
-	url := resourceProjectGetEndpoint(clientSettings, d.Id())
+	url := resourceProjectGetEndpoint(clientSettingsAuth, d.Id())
 	err := url.Req("DELETE", nil, &out)
 
 	if err != nil {
