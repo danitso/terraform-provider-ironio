@@ -1,6 +1,6 @@
 default: build
 
-build:
+build: install
 	go build .
 
 test:
