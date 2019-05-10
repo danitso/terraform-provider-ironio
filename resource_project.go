@@ -101,11 +101,12 @@ func resourceProjectRead(d *schema.ResourceData, m interface{}) error {
 	err := url.Req("GET", nil, &out)
 
 	if err != nil {
-		if strings.Contains(err.Error(), " 404 ") {
+		if strings.Contains(err.Error(), "404") {
 			d.SetId("")
 
 			return nil
 		}
+
 		return err
 	}
 
@@ -155,10 +156,6 @@ func resourceProjectDelete(d *schema.ResourceData, m interface{}) error {
 		if !strings.Contains(err.Error(), " 404 ") {
 			return err
 		}
-	}
-
-	if out.Message != "success" {
-		return fmt.Errorf("ERROR: Failed to delete the project due to an unknown error")
 	}
 
 	d.SetId("")

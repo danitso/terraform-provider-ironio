@@ -177,7 +177,7 @@ func resourcePushQueueRead(d *schema.ResourceData, m interface{}) error {
 	queueInfo, err := queue.Info()
 
 	if err != nil {
-		if strings.Contains(err.Error(), "Queue not found") {
+		if strings.Contains(err.Error(), "404") {
 			d.SetId("")
 
 			return nil
