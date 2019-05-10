@@ -37,7 +37,7 @@ The following arguments are supported:
 * `mq_host` - (Optional) This is the address of the IronMQ service. Defaults to `mq-aws-us-east-1-1.iron.io`.
 * `mq_port` - (Optional) This is the port number for the IronMQ service. Defaults to `443`.
 * `mq_protocol` - (Optional) This is the protocol to use for IronMQ requests. Defaults to `https`.
-* `token` - (Required) This is the IronMQ token.
+* `token` - (Required) This is the IronAuth token (OAuth).
 * `worker_host` - (Optional) This is the address of the IronWorker service. Defaults to `worker-aws-us-east-1.iron.io`.
 * `worker_port` - (Optional) This is the port number for the IronWorker service. Defaults to `443`.
 * `worker_protocol` - (Optional) This is the protocol to use for IronWorker requests. Defaults to `https`.
