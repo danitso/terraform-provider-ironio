@@ -17,7 +17,7 @@ Enter the provider directory, initialize and build the provider
 
 ```sh
 $ cd $GOPATH/src/github.com/danitso/terraform-provider-ironio
-$ make init 
+$ make init
 $ make build
 ```
 
@@ -27,72 +27,49 @@ If you're building the provider, follow the instructions to [install it as a plu
 ## Configuration
 The following arguments are supported:
 
-* `host` - (Optional) This is the address of the IronMQ cluster. Defaults to `mq-aws-us-east-1-1.iron.io`.
-* `load_config_file` - (Optional) This determines whether to ignore all the attributes and load the JSON configuration file instead. Defaults to `false`.
-* `port` - (Optional) This is the port number for the IronMQ cluster. Defaults to `443`.
-* `project_id` - (Required) This is the IronMQ project id.
-* `protocol` - (Optional) This is the protocol to use for cluster communication. Defaults to `https`.
+* `auth_host` - (Optional) This is the address of the IronAuth service. Defaults to `auth.iron.io`.
+* `auth_port` - (Optional) This is the port number for the IronAuth service. Defaults to `443`.
+* `auth_protocol` - (Optional) This is the protocol to use for IronAuth requests. Defaults to `https`.
+* `cache_host` - (Optional) This is the address of the IronCache service. Defaults to `cache-aws-us-east-1.iron.io`.
+* `cache_port` - (Optional) This is the port number for the IronCache service. Defaults to `443`.
+* `cache_protocol` - (Optional) This is the protocol to use for IronCache requests. Defaults to `https`.
+* `load_config_file` - (Optional) This determines whether to load values from the JSON configuration file (iron.json). Defaults to `false`.
+* `mq_host` - (Optional) This is the address of the IronMQ service. Defaults to `mq-aws-us-east-1-1.iron.io`.
+* `mq_port` - (Optional) This is the port number for the IronMQ service. Defaults to `443`.
+* `mq_protocol` - (Optional) This is the protocol to use for IronMQ requests. Defaults to `https`.
 * `token` - (Required) This is the IronMQ token.
+* `worker_host` - (Optional) This is the address of the IronWorker service. Defaults to `worker-aws-us-east-1.iron.io`.
+* `worker_port` - (Optional) This is the port number for the IronWorker service. Defaults to `443`.
+* `worker_protocol` - (Optional) This is the protocol to use for IronWorker requests. Defaults to `https`.
 
 ## Resources
+
+### Project (ironio_project)
+
+The following arguments are supported:
+
+* `name` - (Required) This is the name of the project.
 
 ### Pull Queue (ironio_pull_queue)
 
 The following arguments are supported:
 
 * `name` - (Required) This is the name of the queue.
-
-Example:
-
-```
-resource "ironio_pull_queue" "example" {
-    name = "example_pull"
-}
-```
+* `project_id` - (Required) This is the id of the project to add the queue to.
 
 ### Push Queue (ironio_push_queue)
 The following arguments are supported:
 
-* `name` - (Required) This is the name of the queue.
 * `error_queue` - (Optional) This is the name of an error queue.
 * `multicast` - (Optional) Whether to create a multicast queue instead of a unicast queue. Defaults to `true`.
+* `name` - (Required) This is the name of the queue.
+* `project_id` - (Required) This is the id of the project to add the queue to.
 * `retries` - (Optional) This is the number of times to try to send a message to a subscriber before moving the message to the error queue. Defaults to `3`.
 * `retries_delay` - (Optional) This is the number of seconds to wait before retrying a failed message. Defaults to `60`.
 * `subscriber` - (Required) This the subscriber block (at least one must be specified).
+    * `headers` - (Optional) This is the headers to include when sending a message to the subscriber. Defaults to `{}`.
     * `name` - (Optional) This is the name of the subscriber. Defaults to an empty string.
     * `url` - (Required) This is the URL for the subscriber.
-    * `headers` - (Optional) This is the headers to include when sending a message to the subscriber. Defaults to `{}`.
-
-Example:
-
-```
-resource "ironio_push_queue" "example" {
-    name = "example_push"
-
-    error_queue = "example_push_error"
-    multicast = true
-    retries = 3
-    retries_delay = 60
-
-    subscriber {
-        name = "example_push_subscriber_1"
-        url = "https://subscriber1.domain.tld"
-
-        headers {
-            "X-Project-Name" = "example"
-        }
-    }
-
-    subscriber {
-        name = "example_push_subscriber_2"
-        url = "https://subscriber2.domain.tld"
-
-        headers {
-            "X-Project-Name" = "example"
-        }
-    }
-}
-```
 
 # Developing the Provider
 If you wish to work on the provider, you'll first need [Go](http://www.golang.org) installed on your machine (version 1.12+ is *required*).
@@ -121,4 +98,4 @@ In order to test the provider, you can simply run `make test`.
 $ make test
 ```
 
-Tests are limited to regression tests, ensuring backwards compability.  
+Tests are limited to regression tests, ensuring backwards compability.
