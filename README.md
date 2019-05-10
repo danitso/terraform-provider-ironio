@@ -13,10 +13,11 @@ $ mkdir -p $GOPATH/src/github.com/danitso; cd $GOPATH/src/github.com/danitso
 $ git clone git@github.com:danitso/terraform-provider-ironio
 ```
 
-Enter the provider directory and build the provider
+Enter the provider directory, initialize and build the provider
 
 ```sh
 $ cd $GOPATH/src/github.com/danitso/terraform-provider-ironio
+$ make init 
 $ make build
 ```
 
@@ -94,7 +95,8 @@ resource "ironio_push_queue" "example" {
 ```
 
 # Developing the Provider
-If you wish to work on the provider, you'll first need [Go](http://www.golang.org) installed on your machine (version 1.12+ is *required*). You'll also need to correctly setup a [GOPATH](http://golang.org/doc/code.html#GOPATH), as well as adding `$GOPATH/bin` to your `$PATH`.
+If you wish to work on the provider, you'll first need [Go](http://www.golang.org) installed on your machine (version 1.12+ is *required*).
+You'll also need to correctly setup a [GOPATH](http://golang.org/doc/code.html#GOPATH), as well as adding `$GOPATH/bin` to your `$PATH`.
 
 To compile the provider, run `make build`. This will build the provider and put the provider binary in the `$GOPATH/bin` directory.
 
@@ -105,8 +107,11 @@ $ $GOPATH/bin/terraform-provider-ironio
 ...
 ```
 
-If you wish to contribute to the provider, all tests must pass and the Go code must be formatted
-using Gofmt.
+If you wish to contribute to the provider, the following requirements must be met,
+
+* All tests must pass using `make test`
+* The Go code must be formatted using Gofmt
+* Dependencies are installed by `make init`
 
 
 # Testing the Provider
