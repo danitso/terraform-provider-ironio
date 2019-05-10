@@ -1,15 +1,15 @@
 default: build
 
-build: install
+build:
 	go build .
 
 test:
 	go test -v
 
-install:
+init:
 	go get -u github.com/hashicorp/terraform/plugin
 	go get -u github.com/hashicorp/terraform/terraform
 
 
-.PHONY: build test install
+.PHONY: build test init
 
