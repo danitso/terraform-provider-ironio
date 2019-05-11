@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
@@ -69,6 +68,7 @@ func resourcePushQueue() *schema.Resource {
 						},
 					},
 				},
+				MinItems: 1,
 			},
 		},
 
@@ -86,10 +86,6 @@ func resourcePushQueueBuildInfo(d *schema.ResourceData) (mq.QueueInfo, error) {
 
 	multicast := d.Get("multicast").(bool)
 	subscribers := d.Get("subscriber").([]interface{})
-
-	if len(subscribers) == 0 {
-		return mq.QueueInfo{}, fmt.Errorf("A push queue requires at least one subscriber")
-	}
 
 	if multicast {
 		queueType = "multicast"

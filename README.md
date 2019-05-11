@@ -2,7 +2,7 @@
 
 # Requirements
 
-- [Terraform](https://www.terraform.io/downloads.html) 0.10+
+- [Terraform](https://www.terraform.io/downloads.html) 0.11+
 - [Go](https://golang.org/doc/install) 1.12 (to build the provider plugin)
 
 # Building the Provider
@@ -49,6 +49,13 @@ The following arguments are supported:
 The following arguments are supported:
 
 * `filter_name` - (Optional) This is the name filter. You can either do an exact match, a prefix match (`prefix*`), a suffix match (`*suffix`) or a wildcard match (`*wildcard*`).
+
+### Queues (ironio_queues)
+
+The following arguments are supported:
+
+* `filter_name` - (Optional) This is the name filter. You can either do an exact match, a prefix match (`prefix*`), a suffix match (`*suffix`) or a wildcard match (`*wildcard*`).
+* `project_id` - (Required) This is the id of the project to retrieve the queues from.
 
 ## Resources
 

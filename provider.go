@@ -24,6 +24,7 @@ func Provider() *schema.Provider {
 		ConfigureFunc: providerConfigure,
 		DataSourcesMap: map[string]*schema.Resource{
 			"ironio_projects": dataSourceProjects(),
+			"ironio_queues":   dataSourceQueues(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"ironio_project":    resourceProject(),
