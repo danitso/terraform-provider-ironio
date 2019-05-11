@@ -22,6 +22,9 @@ type ClientSettings struct {
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		ConfigureFunc: providerConfigure,
+		DataSourcesMap: map[string]*schema.Resource{
+			"ironio_projects": dataSourceProjects(),
+		},
 		ResourcesMap: map[string]*schema.Resource{
 			"ironio_project":    resourceProject(),
 			"ironio_pull_queue": resourcePullQueue(),

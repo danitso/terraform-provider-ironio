@@ -3,31 +3,11 @@ package main
 import (
 	"errors"
 	"fmt"
-	"net/url"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/iron-io/iron_go3/api"
 	"github.com/iron-io/iron_go3/config"
 )
-
-// ProjectInfo describes a project.
-type ProjectInfo struct {
-	ID        string     `json:"id,omitempty"`
-	CreatedAt *time.Time `json:"created_at,omitempty"`
-	UpdatedAt *time.Time `json:"updated_at,omitempty"`
-	TenantID  int        `json:"tenant_id,omitempty"`
-	Name      string     `json:"name,omitempty"`
-	Status    string     `json:"status,omitempty"`
-	UserID    string     `json:"user_id,omitempty"`
-}
-
-// ProjectBody describes a project request payload.
-type ProjectBody struct {
-	Project ProjectInfo `json:"project,omitempty"`
-	Message string      `json:"msg,omitempty"`
-}
 
 // resourceProject() manages projects.
 func resourceProject() *schema.Resource {
@@ -59,7 +39,7 @@ func resourceProjectCreate(d *schema.ResourceData, m interface{}) error {
 
 	var out ProjectBody
 
-	url := resourceProjectGetEndpoint(clientSettingsAuth, "")
+	url := getProjectsURL(clientSettingsAuth, "")
 	err := url.Req("POST", in, &out)
 
 	if err != nil {
@@ -75,20 +55,6 @@ func resourceProjectCreate(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-// resourceProjectGetEndpoint() returns an endpoint for a project.
-func resourceProjectGetEndpoint(cs config.Settings, id string) *api.URL {
-	u := &api.URL{Settings: cs, URL: url.URL{Scheme: cs.Scheme}}
-
-	u.URL.Host = fmt.Sprintf("%s:%d", cs.Host, cs.Port)
-	u.URL.Path = fmt.Sprintf("/%s/projects", cs.ApiVersion)
-
-	if id != "" {
-		u.URL.Path = fmt.Sprintf("%s/%s", u.URL.Path, id)
-	}
-
-	return u
-}
-
 // resourceProjectRead reads information about an existing project.
 func resourceProjectRead(d *schema.ResourceData, m interface{}) error {
 	clientSettings := m.(ClientSettings)
@@ -97,7 +63,7 @@ func resourceProjectRead(d *schema.ResourceData, m interface{}) error {
 
 	var out ProjectBody
 
-	url := resourceProjectGetEndpoint(clientSettingsAuth, d.Id())
+	url := getProjectsURL(clientSettingsAuth, d.Id())
 	err := url.Req("GET", nil, &out)
 
 	if err != nil {
@@ -131,7 +97,7 @@ func resourceProjectUpdate(d *schema.ResourceData, m interface{}) error {
 
 	var out ProjectBody
 
-	url := resourceProjectGetEndpoint(clientSettingsAuth, d.Id())
+	url := getProjectsURL(clientSettingsAuth, d.Id())
 	err := url.Req("PATCH", in, &out)
 
 	if err != nil {
@@ -149,11 +115,11 @@ func resourceProjectDelete(d *schema.ResourceData, m interface{}) error {
 
 	var out ProjectBody
 
-	url := resourceProjectGetEndpoint(clientSettingsAuth, d.Id())
+	url := getProjectsURL(clientSettingsAuth, d.Id())
 	err := url.Req("DELETE", nil, &out)
 
 	if err != nil {
-		if !strings.Contains(err.Error(), " 404 ") {
+		if !strings.Contains(err.Error(), "404") {
 			return err
 		}
 	}

@@ -42,6 +42,14 @@ The following arguments are supported:
 * `worker_port` - (Optional) This is the port number for the IronWorker service. Defaults to `443`.
 * `worker_protocol` - (Optional) This is the protocol to use for IronWorker requests. Defaults to `https`.
 
+## Data Sources
+
+### Projects (ironio_projects)
+
+The following arguments are supported:
+
+* `filter_name` - (Optional) This is the name filter. You can either do an exact match, a prefix match (`prefix*`), a suffix match (`*suffix`) or a wildcard match (`*wildcard*`).
+
 ## Resources
 
 ### Project (ironio_project)
