@@ -7,7 +7,7 @@ default: build
 
 build:
 	go build \
-		-o "bin/$(NAME)_v$(VERSION)_x4"
+		-o "bin/$(NAME)_v$(VERSION)-custom_x4"
 
 fmt:
 	gofmt -w $(GOFMT_FILES)
@@ -22,10 +22,10 @@ targets: $(TARGETS)
 
 $(TARGETS):
 	GOOS=$@ GOARCH=amd64 CGO_ENABLED=0 go build \
-		-o "dist/$@/$(NAME)_v$(VERSION)_x4" \
+		-o "dist/$@/$(NAME)_v$(VERSION)-custom_x4" \
 		-a -ldflags '-extldflags "-static"'
 	zip \
-		-j "dist/$(NAME)_v$(VERSION)_$@_amd64.zip" \
-		"dist/$@/$(NAME)_v$(VERSION)_x4"
+		-j "dist/$(NAME)_v$(VERSION)-custom_$@_amd64.zip" \
+		"dist/$@/$(NAME)_v$(VERSION)-custom_x4"
 
 .PHONY: build fmt test init targets $(TARGETS)
