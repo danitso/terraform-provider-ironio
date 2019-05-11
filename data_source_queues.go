@@ -6,10 +6,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/iron-io/iron_go3/mq"
-
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/iron-io/iron_go3/config"
+	"github.com/iron-io/iron_go3/mq"
 )
 
 // dataSourceQueues() retrieves information about queues.

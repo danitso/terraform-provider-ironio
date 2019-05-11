@@ -1,4 +1,5 @@
 # Terraform Provider for Iron.io
+A Terraform Provider to manage IronAuth, IronCache, IronMQ and IronWorker resources from Iron.io. Support is currently limited to IronAuth and IronMQ.
 
 # Requirements
 
