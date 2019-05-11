@@ -71,7 +71,7 @@ func resourcePullQueueRead(d *schema.ResourceData, m interface{}) error {
 	}
 
 	queue := mq.ConfigNew(queueName, &clientSettingsMQ)
-	_, err := queue.Info()
+	queueInfo, err := queue.Info()
 
 	if err != nil {
 		if strings.Contains(err.Error(), "404") {
@@ -79,7 +79,14 @@ func resourcePullQueueRead(d *schema.ResourceData, m interface{}) error {
 
 			return nil
 		}
+
 		return err
+	}
+
+	if queueInfo.Type != "pull" {
+		d.SetId("")
+
+		return nil
 	}
 
 	return nil
