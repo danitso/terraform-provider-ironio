@@ -8,3 +8,8 @@ data "ironio_queues" "example" {
   filter_name = "${ironio_project.example.name}*"
   project_id  = "${ironio_project.example.id}"
 }
+
+output "ironio_queues_example_names" {
+  description = "The queue names"
+  value       = "${data.ironio_queues.example.names}"
+}
