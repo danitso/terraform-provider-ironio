@@ -25,7 +25,8 @@ $ make build
 If you're building the provider, follow the instructions to [install it as a plugin.](https://www.terraform.io/docs/plugins/basics.html#installing-plugins) After placing it into your plugins directory,  run `terraform init` to initialize it.
 
 ## Configuration
-The following arguments are supported:
+
+### Arguments
 
 * `auth_host` - (Optional) This is the address of the IronAuth service. Defaults to `auth.iron.io`.
 * `auth_port` - (Optional) This is the port number for the IronAuth service. Defaults to `443`.
@@ -46,34 +47,44 @@ The following arguments are supported:
 
 ### Projects (ironio_projects)
 
-The following arguments are supported:
+#### Arguments
 
 * `filter_name` - (Optional) This is the name filter. You can either do an exact match, a prefix match (`prefix*`), a suffix match (`*suffix`) or a wildcard match (`*wildcard*`).
+
+#### Attributes
+
+* `ids` - This is the list of project ids.
+* `names` - This is the list of project names.
 
 ### Queues (ironio_queues)
 
-The following arguments are supported:
+#### Arguments
 
 * `filter_name` - (Optional) This is the name filter. You can either do an exact match, a prefix match (`prefix*`), a suffix match (`*suffix`) or a wildcard match (`*wildcard*`).
 * `project_id` - (Required) This is the id of the project to retrieve the queues from.
+
+#### Attributes
+
+* `names` - This is the list of project names.
 
 ## Resources
 
 ### Project (ironio_project)
 
-The following arguments are supported:
+#### Arguments
 
 * `name` - (Required) This is the name of the project.
 
 ### Pull Queue (ironio_pull_queue)
 
-The following arguments are supported:
+#### Arguments
 
 * `name` - (Required) This is the name of the queue.
 * `project_id` - (Required) This is the id of the project to add the queue to.
 
 ### Push Queue (ironio_push_queue)
-The following arguments are supported:
+
+#### Arguments
 
 * `error_queue` - (Optional) This is the name of an error queue.
 * `multicast` - (Optional) Whether to create a multicast queue instead of a unicast queue. Defaults to `true`.
@@ -104,7 +115,6 @@ If you wish to contribute to the provider, the following requirements must be me
 * All tests must pass using `make test`
 * The Go code must be formatted using Gofmt
 * Dependencies are installed by `make init`
-
 
 # Testing the Provider
 In order to test the provider, you can simply run `make test`.
