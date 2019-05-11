@@ -65,7 +65,7 @@ If you're building the provider, follow the instructions to [install it as a plu
 
 #### Attributes
 
-* `names` - This is the list of project names.
+* `names` - This is the list of queue names.
 
 ## Resources
 
