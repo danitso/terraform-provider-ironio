@@ -10,6 +10,16 @@ import (
 	"github.com/iron-io/iron_go3/config"
 )
 
+const ProviderConfigurationAuthKey = "auth"
+const ProviderConfigurationCacheKey = "cache"
+const ProviderConfigurationHostKey = "host"
+const ProviderConfigurationLoadConfigFileKey = "load_config_file"
+const ProviderConfigurationMQKey = "mq"
+const ProviderConfigurationPortKey = "port"
+const ProviderConfigurationProtocolKey = "protocol"
+const ProviderConfigurationTokenKey = "token"
+const ProviderConfigurationWorkerKey = "worker"
+
 // ClientSettings contains the settings for each Iron.io product.
 type ClientSettings struct {
 	Auth   config.Settings
@@ -32,89 +42,125 @@ func Provider() *schema.Provider {
 			"ironio_push_queue": resourcePushQueue(),
 		},
 		Schema: map[string]*schema.Schema{
-			"auth_host": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "",
-				Description: "The IronAuth hostname or IP address",
+			ProviderConfigurationAuthKey: &schema.Schema{
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						ProviderConfigurationHostKey: {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default:     "",
+							Description: "The IronAuth hostname or IP address",
+						},
+						ProviderConfigurationPortKey: {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Default:     0,
+							Description: "The IronAuth port number",
+						},
+						ProviderConfigurationProtocolKey: {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default:     "",
+							Description: "The IronAuth protocol (HTTP or HTTPS)",
+						},
+						ProviderConfigurationTokenKey: {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default:     "",
+							Description: "The IronAuth token (OAuth)",
+						},
+					},
+				},
+				MaxItems: 1,
 			},
-			"auth_port": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Default:     0,
-				Description: "The IronAuth port number",
+			ProviderConfigurationCacheKey: &schema.Schema{
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						ProviderConfigurationHostKey: {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default:     "",
+							Description: "The IronCache hostname or IP address",
+						},
+						ProviderConfigurationPortKey: {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Default:     0,
+							Description: "The IronCache port number",
+						},
+						ProviderConfigurationProtocolKey: {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default:     "",
+							Description: "The IronCache protocol (HTTP or HTTPS)",
+						},
+					},
+				},
+				MaxItems: 1,
 			},
-			"auth_protocol": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "",
-				Description: "The IronAuth protocol (HTTP or HTTPS)",
-			},
-			"cache_host": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "",
-				Description: "The IronCache hostname or IP address",
-			},
-			"cache_port": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Default:     0,
-				Description: "The IronCache port number",
-			},
-			"cache_protocol": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "",
-				Description: "The IronCache protocol (HTTP or HTTPS)",
-			},
-			"load_config_file": {
+			ProviderConfigurationLoadConfigFileKey: {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     false,
+				Default:     true,
 				Description: "Whether to load the iron.json configuration file",
 			},
-			"mq_host": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "",
-				Description: "The IronMQ hostname or IP address",
+			ProviderConfigurationMQKey: &schema.Schema{
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						ProviderConfigurationHostKey: {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default:     "",
+							Description: "The IronMQ hostname or IP address",
+						},
+						ProviderConfigurationPortKey: {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Default:     0,
+							Description: "The IronMQ port number",
+						},
+						ProviderConfigurationProtocolKey: {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default:     "",
+							Description: "The IronMQ protocol (HTTP or HTTPS)",
+						},
+					},
+				},
+				MaxItems: 1,
 			},
-			"mq_port": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Default:     0,
-				Description: "The IronMQ port number",
-			},
-			"mq_protocol": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "",
-				Description: "The IronMQ protocol (HTTP or HTTPS)",
-			},
-			"token": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "",
-				Description: "The token",
-			},
-			"worker_host": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "",
-				Description: "The IronWorker hostname or IP address",
-			},
-			"worker_port": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Default:     0,
-				Description: "The IronWorker port number",
-			},
-			"worker_protocol": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "",
-				Description: "The IronWorker protocol (HTTP or HTTPS)",
+			ProviderConfigurationWorkerKey: &schema.Schema{
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						ProviderConfigurationHostKey: {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default:     "",
+							Description: "The IronWorker hostname or IP address",
+						},
+						ProviderConfigurationPortKey: {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Default:     0,
+							Description: "The IronWorker port number",
+						},
+						ProviderConfigurationProtocolKey: {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default:     "",
+							Description: "The IronWorker protocol (HTTP or HTTPS)",
+						},
+					},
+				},
+				MaxItems: 1,
 			},
 		},
 	}
@@ -137,7 +183,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			),
 		},
 	}
-	loadConfigFile := d.Get("load_config_file").(bool)
+	loadConfigFile := d.Get(ProviderConfigurationLoadConfigFileKey).(bool)
 
 	if loadConfigFile {
 		// Use the settings stored in the configuration file or the environment variables.
@@ -155,82 +201,105 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		clientSettings.Worker.UseSettings(&clientSettingsPresetWorker)
 	}
 
+	// Change the user agent to make it easier to analyze API requests.
+	clientSettings.Cache.UserAgent = clientSettings.Auth.UserAgent
+	clientSettings.MQ.UserAgent = clientSettings.Auth.UserAgent
+	clientSettings.Worker.UserAgent = clientSettings.Auth.UserAgent
+
 	// Modify the authentication settings based on the configuration values.
-	authHost := d.Get("auth_host").(string)
-	authPort := uint16(d.Get("auth_port").(int))
-	authProtocol := d.Get("auth_protocol").(string)
+	auth := d.Get(ProviderConfigurationAuthKey).([]interface{})
 
-	if authHost != "" {
-		clientSettings.Auth.Host = authHost
-	}
+	if len(auth) > 0 {
+		authInfo := auth[0].(map[string]interface{})
+		authHost := authInfo[ProviderConfigurationHostKey].(string)
+		authPort := uint16(authInfo[ProviderConfigurationPortKey].(int))
+		authProtocol := authInfo[ProviderConfigurationProtocolKey].(string)
+		authToken := authInfo[ProviderConfigurationTokenKey].(string)
 
-	if authPort != 0 {
-		clientSettings.Auth.Port = authPort
-	}
+		if authHost != "" {
+			clientSettings.Auth.Host = authHost
+		}
 
-	if authProtocol != "" {
-		clientSettings.Auth.Scheme = authProtocol
+		if authPort != 0 {
+			clientSettings.Auth.Port = authPort
+		}
+
+		if authProtocol != "" {
+			clientSettings.Auth.Scheme = authProtocol
+		}
+
+		if authToken != "" {
+			clientSettings.Auth.Token = authToken
+			clientSettings.Cache.Token = clientSettings.Auth.Token
+			clientSettings.MQ.Token = clientSettings.Auth.Token
+			clientSettings.Worker.Token = clientSettings.Auth.Token
+		}
 	}
 
 	// Modify the cache settings based on the configuration values.
-	cacheHost := d.Get("cache_host").(string)
-	cachePort := uint16(d.Get("cache_port").(int))
-	cacheProtocol := d.Get("cache_protocol").(string)
+	cache := d.Get(ProviderConfigurationCacheKey).([]interface{})
 
-	if cacheHost != "" {
-		clientSettings.Cache.Host = cacheHost
-	}
+	if len(cache) > 0 {
+		cacheInfo := cache[0].(map[string]interface{})
+		cacheHost := cacheInfo[ProviderConfigurationHostKey].(string)
+		cachePort := uint16(cacheInfo[ProviderConfigurationPortKey].(int))
+		cacheProtocol := cacheInfo[ProviderConfigurationProtocolKey].(string)
 
-	if cachePort != 0 {
-		clientSettings.Cache.Port = cachePort
-	}
+		if cacheHost != "" {
+			clientSettings.Cache.Host = cacheHost
+		}
 
-	if cacheProtocol != "" {
-		clientSettings.Cache.Scheme = cacheProtocol
+		if cachePort != 0 {
+			clientSettings.Cache.Port = cachePort
+		}
+
+		if cacheProtocol != "" {
+			clientSettings.Cache.Scheme = cacheProtocol
+		}
 	}
 
 	// Modify the MQ settings based on the configuration values.
-	mqHost := d.Get("mq_host").(string)
-	mqPort := uint16(d.Get("mq_port").(int))
-	mqProtocol := d.Get("mq_protocol").(string)
+	mq := d.Get(ProviderConfigurationMQKey).([]interface{})
 
-	if mqHost != "" {
-		clientSettings.MQ.Host = mqHost
-	}
+	if len(mq) > 0 {
+		mqInfo := mq[0].(map[string]interface{})
+		mqHost := mqInfo[ProviderConfigurationHostKey].(string)
+		mqPort := uint16(mqInfo[ProviderConfigurationPortKey].(int))
+		mqProtocol := mqInfo[ProviderConfigurationProtocolKey].(string)
 
-	if mqPort != 0 {
-		clientSettings.MQ.Port = mqPort
-	}
+		if mqHost != "" {
+			clientSettings.MQ.Host = mqHost
+		}
 
-	if mqProtocol != "" {
-		clientSettings.MQ.Scheme = mqProtocol
+		if mqPort != 0 {
+			clientSettings.MQ.Port = mqPort
+		}
+
+		if mqProtocol != "" {
+			clientSettings.MQ.Scheme = mqProtocol
+		}
 	}
 
 	// Modify the worker settings based on the configuration values.
-	workerHost := d.Get("worker_host").(string)
-	workerPort := uint16(d.Get("worker_port").(int))
-	workerProtocol := d.Get("worker_protocol").(string)
+	worker := d.Get(ProviderConfigurationWorkerKey).([]interface{})
 
-	if workerHost != "" {
-		clientSettings.MQ.Host = workerHost
-	}
+	if len(worker) > 0 {
+		workerInfo := worker[0].(map[string]interface{})
+		workerHost := workerInfo[ProviderConfigurationHostKey].(string)
+		workerPort := uint16(workerInfo[ProviderConfigurationPortKey].(int))
+		workerProtocol := workerInfo[ProviderConfigurationProtocolKey].(string)
 
-	if workerPort != 0 {
-		clientSettings.MQ.Port = workerPort
-	}
+		if workerHost != "" {
+			clientSettings.Worker.Host = workerHost
+		}
 
-	if workerProtocol != "" {
-		clientSettings.MQ.Scheme = workerProtocol
-	}
+		if workerPort != 0 {
+			clientSettings.Worker.Port = workerPort
+		}
 
-	// Specify common values for all the services.
-	token := d.Get("token").(string)
-
-	if token != "" {
-		clientSettings.Auth.Token = token
-		clientSettings.Cache.Token = token
-		clientSettings.MQ.Token = token
-		clientSettings.Worker.Token = token
+		if workerProtocol != "" {
+			clientSettings.Worker.Scheme = workerProtocol
+		}
 	}
 
 	// Verify that the token has been specified for all services as we cannot proceed without it.
@@ -243,11 +312,6 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	} else if clientSettings.Worker.Token == "" {
 		return clientSettings, errors.New("The token for IronWorker is undefined")
 	}
-
-	// Change the user agent to make it easier to analyze API requests.
-	clientSettings.Cache.UserAgent = clientSettings.Auth.UserAgent
-	clientSettings.MQ.UserAgent = clientSettings.Auth.UserAgent
-	clientSettings.Worker.UserAgent = clientSettings.Auth.UserAgent
 
 	return clientSettings, nil
 }
