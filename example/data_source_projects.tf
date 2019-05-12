@@ -1,6 +1,9 @@
 data "ironio_projects" "example" {
-  depends_on  = ["ironio_project.example"]
-  filter_name = "${ironio_project.example.name}"
+  depends_on = ["ironio_project.example"]
+
+  filter {
+    name = "${ironio_project.example.name}"
+  }
 }
 
 output "data_ironio_projects_example_ids" {
