@@ -10,16 +10,21 @@ import (
 	"github.com/iron-io/iron_go3/config"
 )
 
+const DataSourceProjectsFilterKey = "filter"
+const DataSourceProjectsIdsKey = "ids"
+const DataSourceProjectsNameKey = "name"
+const DataSourceProjectsNamesKey = "names"
+
 // dataSourceProjects() retrieves information about projects.
 func dataSourceProjects() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"filter": &schema.Schema{
+			DataSourceProjectsFilterKey: &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"name": &schema.Schema{
+						DataSourceProjectsNameKey: &schema.Schema{
 							Type:        schema.TypeString,
 							Optional:    true,
 							Default:     "",
@@ -30,12 +35,12 @@ func dataSourceProjects() *schema.Resource {
 				},
 				MaxItems: 1,
 			},
-			"ids": &schema.Schema{
+			DataSourceProjectsIdsKey: &schema.Schema{
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
-			"names": &schema.Schema{
+			DataSourceProjectsNamesKey: &schema.Schema{
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
@@ -53,13 +58,13 @@ func dataSourceProjectsRead(d *schema.ResourceData, m interface{}) error {
 	clientSettingsAuth.UseSettings(&clientSettings.Auth)
 
 	// Prepare the filters.
-	filter := d.Get("filter").([]interface{})
+	filter := d.Get(DataSourceProjectsFilterKey).([]interface{})
 	filterName := ""
 	filterNameMode := 0
 
 	if len(filter) > 0 {
 		filterData := filter[0].(map[string]interface{})
-		filterName = filterData["name"].(string)
+		filterName = filterData[DataSourceProjectsNameKey].(string)
 
 		if filterName != "" {
 			if len(filterName) >= 2 && strings.HasPrefix(filterName, "*") && strings.HasSuffix(filterName, "*") {
@@ -118,8 +123,8 @@ func dataSourceProjectsRead(d *schema.ResourceData, m interface{}) error {
 	h.Write([]byte(strings.Join(ids, ",")))
 
 	d.SetId(fmt.Sprintf("%x", h.Sum(nil)))
-	d.Set("ids", ids)
-	d.Set("names", names)
+	d.Set(DataSourceProjectsIdsKey, ids)
+	d.Set(DataSourceProjectsNamesKey, names)
 
 	return nil
 }

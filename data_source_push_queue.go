@@ -8,66 +8,78 @@ import (
 	"github.com/iron-io/iron_go3/mq"
 )
 
+const DataSourcePushQueueErrorQueueKey = "error_queue"
+const DataSourcePushQueueHeadersKey = "headers"
+const DataSourcePushQueueMessageCountKey = "message_count"
+const DataSourcePushQueueMessageCountTotalKey = "message_count_total"
+const DataSourcePushQueueMulticastKey = "multicast"
+const DataSourcePushQueueNameKey = "name"
+const DataSourcePushQueueProjectIDKey = "project_id"
+const DataSourcePushQueueRetriesDelayKey = "retries_delay"
+const DataSourcePushQueueRetriesKey = "retries"
+const DataSourcePushQueueSubscriberKey = "subscriber"
+const DataSourcePushQueueURLKey = "url"
+
 // dataSourcePushQueue() reads information about IronMQ push queues.
 func dataSourcePushQueue() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"error_queue": &schema.Schema{
+			DataSourcePushQueueErrorQueueKey: &schema.Schema{
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "The name of an error queue",
 			},
-			"message_count": &schema.Schema{
+			DataSourcePushQueueMessageCountKey: &schema.Schema{
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "The number of messages currently in the queue",
 			},
-			"message_count_total": &schema.Schema{
+			DataSourcePushQueueMessageCountTotalKey: &schema.Schema{
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "The number of messages which have been processed by the queue",
 			},
-			"multicast": &schema.Schema{
+			DataSourcePushQueueMulticastKey: &schema.Schema{
 				Type:        schema.TypeBool,
 				Computed:    true,
 				Description: "Whether to create a multicast push queue",
 			},
-			"name": &schema.Schema{
+			DataSourcePushQueueNameKey: &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The name of the queue",
 				ForceNew:    true,
 			},
-			"project_id": &schema.Schema{
+			DataSourcePushQueueProjectIDKey: &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The project id",
 				ForceNew:    true,
 			},
-			"retries": &schema.Schema{
+			DataSourcePushQueueRetriesKey: &schema.Schema{
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "The number of retries before moving on to the next message",
 			},
-			"retries_delay": &schema.Schema{
+			DataSourcePushQueueRetriesDelayKey: &schema.Schema{
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "The number of seconds to wait before re-sending a failed message",
 			},
-			"subscriber": &schema.Schema{
+			DataSourcePushQueueSubscriberKey: &schema.Schema{
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"headers": {
+						DataSourcePushQueueHeadersKey: {
 							Type:     schema.TypeMap,
 							Optional: true,
 						},
-						"name": {
+						DataSourcePushQueueNameKey: {
 							Type:     schema.TypeString,
 							Optional: true,
 						},
-						"url": {
+						DataSourcePushQueueURLKey: {
 							Type:     schema.TypeString,
 							Required: true,
 						},
@@ -86,8 +98,8 @@ func dataSourcePushQueueRead(d *schema.ResourceData, m interface{}) error {
 	clientSettingsMQ := config.Settings{}
 	clientSettingsMQ.UseSettings(&clientSettings.MQ)
 
-	projectID := d.Get("project_id").(string)
-	queueName := d.Get("name").(string)
+	projectID := d.Get(DataSourcePushQueueProjectIDKey).(string)
+	queueName := d.Get(DataSourcePushQueueNameKey).(string)
 
 	clientSettingsMQ.ProjectId = projectID
 

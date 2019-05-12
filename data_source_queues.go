@@ -11,30 +11,38 @@ import (
 	"github.com/iron-io/iron_go3/mq"
 )
 
+const DataSourceQueuesFilterKey = "filter"
+const DataSourceQueuesNameKey = "name"
+const DataSourceQueuesNamesKey = "names"
+const DataSourceQueuesPullKey = "pull"
+const DataSourceQueuesPushKey = "push"
+const DataSourceQueuesProjectIDKey = "project_id"
+const DataSourceQueuesTypesKey = "types"
+
 // dataSourceQueues() retrieves information about queues.
 func dataSourceQueues() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"filter": &schema.Schema{
+			DataSourceQueuesFilterKey: &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"name": &schema.Schema{
+						DataSourceQueuesNameKey: &schema.Schema{
 							Type:        schema.TypeString,
 							Optional:    true,
 							Default:     "",
 							Description: "The name filter",
 							ForceNew:    true,
 						},
-						"pull": &schema.Schema{
+						DataSourceQueuesPullKey: &schema.Schema{
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     true,
 							Description: "Whether to include pull queues",
 							ForceNew:    true,
 						},
-						"push": &schema.Schema{
+						DataSourceQueuesPushKey: &schema.Schema{
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     true,
@@ -45,18 +53,18 @@ func dataSourceQueues() *schema.Resource {
 				},
 				MaxItems: 1,
 			},
-			"names": &schema.Schema{
+			DataSourceQueuesNamesKey: &schema.Schema{
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
-			"project_id": &schema.Schema{
+			DataSourceQueuesProjectIDKey: &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The project id",
 				ForceNew:    true,
 			},
-			"types": &schema.Schema{
+			DataSourceQueuesTypesKey: &schema.Schema{
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
@@ -72,10 +80,10 @@ func dataSourceQueuesRead(d *schema.ResourceData, m interface{}) error {
 	clientSettings := m.(ClientSettings)
 	clientSettingsMQ := config.Settings{}
 	clientSettingsMQ.UseSettings(&clientSettings.MQ)
-	clientSettingsMQ.ProjectId = d.Get("project_id").(string)
+	clientSettingsMQ.ProjectId = d.Get(DataSourceQueuesProjectIDKey).(string)
 
 	// Prepare the filters.
-	filter := d.Get("filter").([]interface{})
+	filter := d.Get(DataSourceQueuesFilterKey).([]interface{})
 	filterName := ""
 	filterNameMode := 0
 	filterPull := true
@@ -83,9 +91,9 @@ func dataSourceQueuesRead(d *schema.ResourceData, m interface{}) error {
 
 	if len(filter) > 0 {
 		filterData := filter[0].(map[string]interface{})
-		filterName = filterData["name"].(string)
-		filterPull = filterData["pull"].(bool)
-		filterPush = filterData["push"].(bool)
+		filterName = filterData[DataSourceQueuesNameKey].(string)
+		filterPull = filterData[DataSourceQueuesPullKey].(bool)
+		filterPush = filterData[DataSourceQueuesPushKey].(bool)
 
 		if filterName != "" {
 			if len(filterName) >= 2 && strings.HasPrefix(filterName, "*") && strings.HasSuffix(filterName, "*") {
@@ -153,8 +161,8 @@ func dataSourceQueuesRead(d *schema.ResourceData, m interface{}) error {
 	h := sha256.New()
 	h.Write([]byte(strings.Join(names, ",")))
 
-	d.Set("names", names)
-	d.Set("types", types)
+	d.Set(DataSourceQueuesNamesKey, names)
+	d.Set(DataSourceQueuesTypesKey, types)
 
 	d.SetId(fmt.Sprintf("%x", h.Sum(nil)))
 
