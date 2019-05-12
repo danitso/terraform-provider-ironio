@@ -88,7 +88,8 @@ If you're building the provider, follow the instructions to [install it as a plu
 
 #### Arguments
 
-* `filter_name` - (Optional) This is the name filter. You can either do an exact match, a prefix match (`prefix*`), a suffix match (`*suffix`) or a wildcard match (`*wildcard*`).
+* `filter` - (Optional) This is the filter block.
+    * `name` - (Optional) This is the name filter. You can either do an exact match, a prefix match (`prefix*`), a suffix match (`*suffix`) or a wildcard match (`*wildcard*`).
 
 #### Attributes
 
@@ -99,12 +100,16 @@ If you're building the provider, follow the instructions to [install it as a plu
 
 #### Arguments
 
-* `filter_name` - (Optional) This is the name filter. You can either do an exact match, a prefix match (`prefix*`), a suffix match (`*suffix`) or a wildcard match (`*wildcard*`).
+* `filter` - (Optional) This is the filter block.
+    * `name` - (Optional) This is the name filter. You can either do an exact match, a prefix match (`prefix*`), a suffix match (`*suffix`) or a wildcard match (`*wildcard*`).
+    * `pull` - (Optional) Whether to include pull queues in the result.
+    * `push` - (Optional) Whether to include push queues in the result.
 * `project_id` - (Required) This is the id of the project to retrieve the queues from.
 
 #### Attributes
 
 * `names` - This is the list of queue names.
+* `types` - This is the list of queue types.
 
 ## Resources
 
