@@ -1,5 +1,7 @@
 provider "ironio" {
-  token = "${var.token}"
+  auth {
+    token = "${var.token}"
+  }
 }
 
 variable "token" {

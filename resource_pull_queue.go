@@ -8,17 +8,32 @@ import (
 	"github.com/iron-io/iron_go3/mq"
 )
 
+const ResourcePullQueueMessageCountKey = "message_count"
+const ResourcePullQueueMessageCountTotalKey = "message_count_total"
+const ResourcePullQueueNameKey = "name"
+const ResourcePullQueueProjectIDKey = "project_id"
+
 // resourcePullQueue() manages IronMQ pull queues.
 func resourcePullQueue() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			ResourcePullQueueMessageCountKey: &schema.Schema{
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The number of messages currently in the queue",
+			},
+			ResourcePullQueueMessageCountTotalKey: &schema.Schema{
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The number of messages which have been processed by the queue",
+			},
+			ResourcePullQueueNameKey: &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The name of the queue",
 				ForceNew:    true,
 			},
-			"project_id": &schema.Schema{
+			ResourcePullQueueProjectIDKey: &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The project id",
@@ -38,8 +53,8 @@ func resourcePullQueueCreate(d *schema.ResourceData, m interface{}) error {
 	clientSettingsMQ := config.Settings{}
 	clientSettingsMQ.UseSettings(&clientSettings.MQ)
 
-	projectID := d.Get("project_id").(string)
-	queueName := d.Get("name").(string)
+	projectID := d.Get(ResourcePullQueueProjectIDKey).(string)
+	queueName := d.Get(ResourcePullQueueNameKey).(string)
 
 	clientSettingsMQ.ProjectId = projectID
 	queueInfo := mq.QueueInfo{
@@ -63,8 +78,8 @@ func resourcePullQueueRead(d *schema.ResourceData, m interface{}) error {
 	clientSettingsMQ := config.Settings{}
 	clientSettingsMQ.UseSettings(&clientSettings.MQ)
 
-	projectID := d.State().Attributes["project_id"]
-	queueName := d.State().Attributes["name"]
+	projectID := d.State().Attributes[ResourcePullQueueProjectIDKey]
+	queueName := d.State().Attributes[ResourcePullQueueNameKey]
 
 	if projectID != "" {
 		clientSettingsMQ.ProjectId = projectID
@@ -89,6 +104,9 @@ func resourcePullQueueRead(d *schema.ResourceData, m interface{}) error {
 		return nil
 	}
 
+	d.Set(ResourcePullQueueMessageCountKey, queueInfo.Size)
+	d.Set(ResourcePullQueueMessageCountTotalKey, queueInfo.TotalMessages)
+
 	return nil
 }
 
@@ -98,8 +116,8 @@ func resourcePullQueueDelete(d *schema.ResourceData, m interface{}) error {
 	clientSettingsMQ := config.Settings{}
 	clientSettingsMQ.UseSettings(&clientSettings.MQ)
 
-	projectID := d.State().Attributes["project_id"]
-	queueName := d.State().Attributes["name"]
+	projectID := d.State().Attributes[ResourcePullQueueProjectIDKey]
+	queueName := d.State().Attributes[ResourcePullQueueNameKey]
 
 	if projectID != "" {
 		clientSettingsMQ.ProjectId = projectID

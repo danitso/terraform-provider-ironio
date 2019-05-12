@@ -10,23 +10,37 @@ import (
 	"github.com/iron-io/iron_go3/config"
 )
 
+const DataSourceProjectsFilterKey = "filter"
+const DataSourceProjectsIdsKey = "ids"
+const DataSourceProjectsNameKey = "name"
+const DataSourceProjectsNamesKey = "names"
+
 // dataSourceProjects() retrieves information about projects.
 func dataSourceProjects() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"filter_name": &schema.Schema{
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "",
-				Description: "The name filter",
-				ForceNew:    true,
+			DataSourceProjectsFilterKey: &schema.Schema{
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						DataSourceProjectsNameKey: &schema.Schema{
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default:     "",
+							Description: "The name filter",
+							ForceNew:    true,
+						},
+					},
+				},
+				MaxItems: 1,
 			},
-			"ids": &schema.Schema{
+			DataSourceProjectsIdsKey: &schema.Schema{
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
-			"names": &schema.Schema{
+			DataSourceProjectsNamesKey: &schema.Schema{
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
@@ -44,25 +58,31 @@ func dataSourceProjectsRead(d *schema.ResourceData, m interface{}) error {
 	clientSettingsAuth.UseSettings(&clientSettings.Auth)
 
 	// Prepare the filters.
-	filterName := d.Get("filter_name").(string)
+	filter := d.Get(DataSourceProjectsFilterKey).([]interface{})
+	filterName := ""
 	filterNameMode := 0
 
-	if filterName != "" {
-		if len(filterName) >= 2 && strings.HasPrefix(filterName, "*") && strings.HasSuffix(filterName, "*") {
-			filterName = filterName[1 : len(filterName)-1]
-			filterNameMode = 1
-		} else if strings.HasPrefix(filterName, "*") {
-			filterName = filterName[1:len(filterName)]
-			filterNameMode = 2
-		} else if strings.HasSuffix(filterName, "*") {
-			filterName = filterName[0 : len(filterName)-1]
-			filterNameMode = 3
-		} else {
-			filterNameMode = 4
-		}
+	if len(filter) > 0 {
+		filterData := filter[0].(map[string]interface{})
+		filterName = filterData[DataSourceProjectsNameKey].(string)
 
-		if filterNameMode > 0 && filterName == "" {
-			return errors.New("The name filter cannot be an empty wildcard filter")
+		if filterName != "" {
+			if len(filterName) >= 2 && strings.HasPrefix(filterName, "*") && strings.HasSuffix(filterName, "*") {
+				filterName = filterName[1 : len(filterName)-1]
+				filterNameMode = 1
+			} else if strings.HasPrefix(filterName, "*") {
+				filterName = filterName[1:len(filterName)]
+				filterNameMode = 2
+			} else if strings.HasSuffix(filterName, "*") {
+				filterName = filterName[0 : len(filterName)-1]
+				filterNameMode = 3
+			} else {
+				filterNameMode = 4
+			}
+
+			if filterNameMode > 0 && filterName == "" {
+				return errors.New("The name filter cannot be an empty wildcard filter")
+			}
 		}
 	}
 
@@ -103,8 +123,8 @@ func dataSourceProjectsRead(d *schema.ResourceData, m interface{}) error {
 	h.Write([]byte(strings.Join(ids, ",")))
 
 	d.SetId(fmt.Sprintf("%x", h.Sum(nil)))
-	d.Set("ids", ids)
-	d.Set("names", names)
+	d.Set(DataSourceProjectsIdsKey, ids)
+	d.Set(DataSourceProjectsNamesKey, names)
 
 	return nil
 }

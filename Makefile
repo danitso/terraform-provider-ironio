@@ -6,8 +6,17 @@ VERSION=$$(grep TerraformProviderVersion version.go | grep -o -P '\d\.\d\.\d')
 default: build
 
 build:
-	go build \
-		-o "bin/$(NAME)_v$(VERSION)-custom_x4"
+	go build -o "bin/$(NAME)_v$(VERSION)-custom_x4"
+
+example:
+	rm -f "example/$(NAME)_v"*
+	go build -o "example/$(NAME)_v$(VERSION)-custom_x4"
+	@read -p "Enter IronAuth token: " token && \
+		cd ./example && \
+		terraform init && \
+		terraform apply -auto-approve -var "token=$$token" && \
+		terraform apply -auto-approve -var "token=$$token" && \
+		terraform destroy -auto-approve -var "token=$$token"
 
 fmt:
 	gofmt -w $(GOFMT_FILES)
@@ -28,4 +37,4 @@ $(TARGETS):
 		-j "dist/$(NAME)_v$(VERSION)-custom_$@_amd64.zip" \
 		"dist/$@/$(NAME)_v$(VERSION)-custom_x4"
 
-.PHONY: build fmt test init targets $(TARGETS)
+.PHONY: build example fmt test init targets $(TARGETS)

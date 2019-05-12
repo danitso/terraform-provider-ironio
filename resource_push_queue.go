@@ -8,61 +8,83 @@ import (
 	"github.com/iron-io/iron_go3/mq"
 )
 
+const ResourcePushQueueErrorQueueKey = "error_queue"
+const ResourcePushQueueHeadersKey = "headers"
+const ResourcePushQueueMessageCountKey = "message_count"
+const ResourcePushQueueMessageCountTotalKey = "message_count_total"
+const ResourcePushQueueMulticastKey = "multicast"
+const ResourcePushQueueNameKey = "name"
+const ResourcePushQueueProjectIDKey = "project_id"
+const ResourcePushQueueRetriesDelayKey = "retries_delay"
+const ResourcePushQueueRetriesKey = "retries"
+const ResourcePushQueueSubscriberKey = "subscriber"
+const ResourcePushQueueURLKey = "url"
+
 // resourcePushQueue() manages IronMQ push queues.
 func resourcePushQueue() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"error_queue": &schema.Schema{
+			ResourcePushQueueErrorQueueKey: &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The name of an error queue",
 				Default:     "",
 			},
-			"multicast": &schema.Schema{
+			ResourcePushQueueMessageCountKey: &schema.Schema{
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The number of messages currently in the queue",
+			},
+			ResourcePushQueueMessageCountTotalKey: &schema.Schema{
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The number of messages which have been processed by the queue",
+			},
+			ResourcePushQueueMulticastKey: &schema.Schema{
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Whether to create a multicast push queue",
 				ForceNew:    true,
 				Default:     true,
 			},
-			"name": &schema.Schema{
+			ResourcePushQueueNameKey: &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The name of the queue",
 				ForceNew:    true,
 			},
-			"project_id": &schema.Schema{
+			ResourcePushQueueProjectIDKey: &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The project id",
 				ForceNew:    true,
 			},
-			"retries": &schema.Schema{
+			ResourcePushQueueRetriesKey: &schema.Schema{
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Description: "The number of retries before moving on to the next message",
 				Default:     3,
 			},
-			"retries_delay": &schema.Schema{
+			ResourcePushQueueRetriesDelayKey: &schema.Schema{
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Description: "The number of seconds to wait before re-sending a failed message",
 				Default:     60,
 			},
-			"subscriber": &schema.Schema{
+			ResourcePushQueueSubscriberKey: &schema.Schema{
 				Type:     schema.TypeList,
 				Required: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"headers": {
+						ResourcePushQueueHeadersKey: {
 							Type:     schema.TypeMap,
 							Optional: true,
 						},
-						"name": {
+						ResourcePushQueueNameKey: {
 							Type:     schema.TypeString,
 							Optional: true,
 						},
-						"url": {
+						ResourcePushQueueURLKey: {
 							Type:     schema.TypeString,
 							Required: true,
 						},
@@ -81,25 +103,25 @@ func resourcePushQueue() *schema.Resource {
 
 // resourcePushQueueBuildInfo() builds a queue information object.
 func resourcePushQueueBuildInfo(d *schema.ResourceData) (mq.QueueInfo, error) {
-	queueName := d.Get("name").(string)
+	queueName := d.Get(ResourcePushQueueNameKey).(string)
 	queueType := "unicast"
 
-	multicast := d.Get("multicast").(bool)
-	subscribers := d.Get("subscriber").([]interface{})
+	multicast := d.Get(ResourcePushQueueMulticastKey).(bool)
+	subscribers := d.Get(ResourcePushQueueSubscriberKey).([]interface{})
 
 	if multicast {
 		queueType = "multicast"
 	}
 
 	pushInfo := mq.PushInfo{
-		RetriesDelay: d.Get("retries_delay").(int),
-		Retries:      d.Get("retries").(int),
-		ErrorQueue:   d.Get("error_queue").(string),
+		RetriesDelay: d.Get(ResourcePushQueueRetriesDelayKey).(int),
+		Retries:      d.Get(ResourcePushQueueRetriesKey).(int),
+		ErrorQueue:   d.Get(ResourcePushQueueErrorQueueKey).(string),
 	}
 
 	for _, v := range subscribers {
 		resource_data := v.(map[string]interface{})
-		url := resource_data["url"].(string)
+		url := resource_data[ResourcePushQueueURLKey].(string)
 
 		if url == "" {
 			continue
@@ -107,12 +129,12 @@ func resourcePushQueueBuildInfo(d *schema.ResourceData) (mq.QueueInfo, error) {
 
 		push_headers := map[string]string{}
 
-		for hn, hv := range resource_data["headers"].(map[string]interface{}) {
+		for hn, hv := range resource_data[ResourcePushQueueHeadersKey].(map[string]interface{}) {
 			push_headers[hn] = hv.(string)
 		}
 
 		subscriber := mq.QueueSubscriber{
-			Name:    resource_data["name"].(string),
+			Name:    resource_data[ResourcePushQueueNameKey].(string),
 			URL:     url,
 			Headers: push_headers,
 		}
@@ -135,8 +157,8 @@ func resourcePushQueueCreate(d *schema.ResourceData, m interface{}) error {
 	clientSettingsMQ := config.Settings{}
 	clientSettingsMQ.UseSettings(&clientSettings.MQ)
 
-	projectID := d.Get("project_id").(string)
-	queueName := d.Get("name").(string)
+	projectID := d.Get(ResourcePushQueueProjectIDKey).(string)
+	queueName := d.Get(ResourcePushQueueNameKey).(string)
 
 	clientSettingsMQ.ProjectId = projectID
 	queueInfo, err := resourcePushQueueBuildInfo(d)
@@ -156,14 +178,55 @@ func resourcePushQueueCreate(d *schema.ResourceData, m interface{}) error {
 	return resourcePushQueueRead(d, m)
 }
 
+// resourcePushQueueParseInfo() parses information about an existing push queue.
+func resourcePushQueueParseInfo(d *schema.ResourceData, queueInfo *mq.QueueInfo) error {
+	if queueInfo.Type == "multicast" {
+		d.Set(ResourcePushQueueMulticastKey, true)
+	} else {
+		d.Set(ResourcePushQueueMulticastKey, false)
+	}
+
+	if queueInfo.Push != nil {
+		d.Set(ResourcePushQueueErrorQueueKey, queueInfo.Push.ErrorQueue)
+		d.Set(ResourcePushQueueRetriesKey, queueInfo.Push.Retries)
+		d.Set(ResourcePushQueueRetriesDelayKey, queueInfo.Push.RetriesDelay)
+
+		if queueInfo.Push.Subscribers != nil {
+			subscribers := make([]interface{}, len(queueInfo.Push.Subscribers))
+
+			for k, v := range queueInfo.Push.Subscribers {
+				subscriberMap := make(map[string]interface{})
+				headersMap := make(map[string]interface{})
+
+				for hk, hv := range v.Headers {
+					headersMap[hk] = hv
+				}
+
+				subscriberMap[ResourcePushQueueNameKey] = v.Name
+				subscriberMap[ResourcePushQueueURLKey] = v.URL
+				subscriberMap[ResourcePushQueueHeadersKey] = headersMap
+
+				subscribers[k] = subscriberMap
+			}
+
+			d.Set(ResourcePushQueueSubscriberKey, subscribers)
+		}
+	}
+
+	d.Set(ResourcePushQueueMessageCountKey, queueInfo.Size)
+	d.Set(ResourcePushQueueMessageCountTotalKey, queueInfo.TotalMessages)
+
+	return nil
+}
+
 // resourcePushQueueRead() reads information about an existing push queue.
 func resourcePushQueueRead(d *schema.ResourceData, m interface{}) error {
 	clientSettings := m.(ClientSettings)
 	clientSettingsMQ := config.Settings{}
 	clientSettingsMQ.UseSettings(&clientSettings.MQ)
 
-	projectID := d.State().Attributes["project_id"]
-	queueName := d.State().Attributes["name"]
+	projectID := d.State().Attributes[ResourcePushQueueProjectIDKey]
+	queueName := d.State().Attributes[ResourcePushQueueNameKey]
 
 	if projectID != "" {
 		clientSettingsMQ.ProjectId = projectID
@@ -188,40 +251,7 @@ func resourcePushQueueRead(d *schema.ResourceData, m interface{}) error {
 		return nil
 	}
 
-	if queueInfo.Type == "multicast" {
-		d.Set("multicast", true)
-	} else {
-		d.Set("multicast", false)
-	}
-
-	if queueInfo.Push != nil {
-		d.Set("error_queue", queueInfo.Push.ErrorQueue)
-		d.Set("retries", queueInfo.Push.Retries)
-		d.Set("retries_delay", queueInfo.Push.RetriesDelay)
-
-		if queueInfo.Push.Subscribers != nil {
-			subscribers := make([]interface{}, len(queueInfo.Push.Subscribers))
-
-			for k, v := range queueInfo.Push.Subscribers {
-				subscriberMap := make(map[string]interface{})
-				headersMap := make(map[string]interface{})
-
-				for hk, hv := range v.Headers {
-					headersMap[hk] = hv
-				}
-
-				subscriberMap["name"] = v.Name
-				subscriberMap["url"] = v.URL
-				subscriberMap["headers"] = headersMap
-
-				subscribers[k] = subscriberMap
-			}
-
-			d.Set("subscriber", subscribers)
-		}
-	}
-
-	return nil
+	return resourcePushQueueParseInfo(d, &queueInfo)
 }
 
 // resourcePushQueueUpdate() updates an existing push queue.
@@ -230,8 +260,8 @@ func resourcePushQueueUpdate(d *schema.ResourceData, m interface{}) error {
 	clientSettingsMQ := config.Settings{}
 	clientSettingsMQ.UseSettings(&clientSettings.MQ)
 
-	projectID := d.Get("project_id").(string)
-	queueName := d.Get("name").(string)
+	projectID := d.Get(ResourcePushQueueProjectIDKey).(string)
+	queueName := d.Get(ResourcePushQueueNameKey).(string)
 
 	clientSettingsMQ.ProjectId = projectID
 	queueInfo, err := resourcePushQueueBuildInfo(d)
@@ -256,8 +286,8 @@ func resourcePushQueueDelete(d *schema.ResourceData, m interface{}) error {
 	clientSettingsMQ := config.Settings{}
 	clientSettingsMQ.UseSettings(&clientSettings.MQ)
 
-	projectID := d.State().Attributes["project_id"]
-	queueName := d.State().Attributes["name"]
+	projectID := d.State().Attributes[ResourcePushQueueProjectIDKey]
+	queueName := d.State().Attributes[ResourcePushQueueNameKey]
 
 	if projectID != "" {
 		clientSettingsMQ.ProjectId = projectID

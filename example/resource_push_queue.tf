@@ -27,3 +27,18 @@ resource "ironio_push_queue" "example" {
     }
   }
 }
+
+output "resource_ironio_push_queue_example_message_count" {
+  description = "The push queue's message count"
+  value       = "${ironio_push_queue.example.message_count}"
+}
+
+output "resource_ironio_push_queue_example_message_count_total" {
+  description = "The push queue's total message count"
+  value       = "${ironio_push_queue.example.message_count_total}"
+}
+
+output "resource_ironio_push_queue_example_subscriber" {
+  description = "The push queue's subscribers"
+  value       = "${ironio_push_queue.example.subscriber}"
+}

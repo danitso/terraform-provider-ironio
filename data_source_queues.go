@@ -11,27 +11,63 @@ import (
 	"github.com/iron-io/iron_go3/mq"
 )
 
+const DataSourceQueuesFilterKey = "filter"
+const DataSourceQueuesNameKey = "name"
+const DataSourceQueuesNamesKey = "names"
+const DataSourceQueuesPullKey = "pull"
+const DataSourceQueuesPushKey = "push"
+const DataSourceQueuesProjectIDKey = "project_id"
+const DataSourceQueuesTypesKey = "types"
+
 // dataSourceQueues() retrieves information about queues.
 func dataSourceQueues() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"filter_name": &schema.Schema{
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "",
-				Description: "The name filter",
-				ForceNew:    true,
+			DataSourceQueuesFilterKey: &schema.Schema{
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						DataSourceQueuesNameKey: &schema.Schema{
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default:     "",
+							Description: "The name filter",
+							ForceNew:    true,
+						},
+						DataSourceQueuesPullKey: &schema.Schema{
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     true,
+							Description: "Whether to include pull queues",
+							ForceNew:    true,
+						},
+						DataSourceQueuesPushKey: &schema.Schema{
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     true,
+							Description: "Whether to include push queues",
+							ForceNew:    true,
+						},
+					},
+				},
+				MaxItems: 1,
 			},
-			"names": &schema.Schema{
+			DataSourceQueuesNamesKey: &schema.Schema{
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
-			"project_id": &schema.Schema{
+			DataSourceQueuesProjectIDKey: &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The project id",
 				ForceNew:    true,
+			},
+			DataSourceQueuesTypesKey: &schema.Schema{
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 		},
 
@@ -44,28 +80,38 @@ func dataSourceQueuesRead(d *schema.ResourceData, m interface{}) error {
 	clientSettings := m.(ClientSettings)
 	clientSettingsMQ := config.Settings{}
 	clientSettingsMQ.UseSettings(&clientSettings.MQ)
-	clientSettingsMQ.ProjectId = d.Get("project_id").(string)
+	clientSettingsMQ.ProjectId = d.Get(DataSourceQueuesProjectIDKey).(string)
 
 	// Prepare the filters.
-	filterName := d.Get("filter_name").(string)
+	filter := d.Get(DataSourceQueuesFilterKey).([]interface{})
+	filterName := ""
 	filterNameMode := 0
+	filterPull := true
+	filterPush := true
 
-	if filterName != "" {
-		if len(filterName) >= 2 && strings.HasPrefix(filterName, "*") && strings.HasSuffix(filterName, "*") {
-			filterName = filterName[1 : len(filterName)-1]
-			filterNameMode = 1
-		} else if strings.HasPrefix(filterName, "*") {
-			filterName = filterName[1:len(filterName)]
-			filterNameMode = 2
-		} else if strings.HasSuffix(filterName, "*") {
-			filterName = filterName[0 : len(filterName)-1]
-			filterNameMode = 3
-		} else {
-			filterNameMode = 4
-		}
+	if len(filter) > 0 {
+		filterData := filter[0].(map[string]interface{})
+		filterName = filterData[DataSourceQueuesNameKey].(string)
+		filterPull = filterData[DataSourceQueuesPullKey].(bool)
+		filterPush = filterData[DataSourceQueuesPushKey].(bool)
 
-		if filterNameMode > 0 && filterName == "" {
-			return errors.New("The name filter cannot be an empty wildcard filter")
+		if filterName != "" {
+			if len(filterName) >= 2 && strings.HasPrefix(filterName, "*") && strings.HasSuffix(filterName, "*") {
+				filterName = filterName[1 : len(filterName)-1]
+				filterNameMode = 1
+			} else if strings.HasPrefix(filterName, "*") {
+				filterName = filterName[1:len(filterName)]
+				filterNameMode = 2
+			} else if strings.HasSuffix(filterName, "*") {
+				filterName = filterName[0 : len(filterName)-1]
+				filterNameMode = 3
+			} else {
+				filterNameMode = 4
+			}
+
+			if filterNameMode > 0 && filterName == "" {
+				return errors.New("The name filter cannot be an empty wildcard filter")
+			}
 		}
 	}
 
@@ -78,6 +124,7 @@ func dataSourceQueuesRead(d *schema.ResourceData, m interface{}) error {
 
 	// Parse and filter the results.
 	names := make([]string, 0)
+	types := make([]string, 0)
 
 	for _, v := range queues {
 		if filterNameMode == 1 && !strings.Contains(v.Name, filterName) {
@@ -90,14 +137,34 @@ func dataSourceQueuesRead(d *schema.ResourceData, m interface{}) error {
 			continue
 		}
 
+		queueInfo, errInfo := v.Info()
+
+		if errInfo != nil {
+			return errInfo
+		}
+
+		if !filterPull && queueInfo.Type == "pull" {
+			continue
+		} else if !filterPush && queueInfo.Type != "pull" {
+			continue
+		}
+
 		names = append(names, v.Name)
+
+		if queueInfo.Type == "pull" {
+			types = append(types, queueInfo.Type)
+		} else {
+			types = append(types, "push")
+		}
 	}
 
 	h := sha256.New()
 	h.Write([]byte(strings.Join(names, ",")))
 
+	d.Set(DataSourceQueuesNamesKey, names)
+	d.Set(DataSourceQueuesTypesKey, types)
+
 	d.SetId(fmt.Sprintf("%x", h.Sum(nil)))
-	d.Set("names", names)
 
 	return nil
 }
