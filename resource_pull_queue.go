@@ -18,6 +18,16 @@ func resourcePullQueue() *schema.Resource {
 				Description: "The name of the queue",
 				ForceNew:    true,
 			},
+			"message_count": &schema.Schema{
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The number of messages currently in the queue",
+			},
+			"message_count_total": &schema.Schema{
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The number of messages which have been processed by the queue",
+			},
 			"project_id": &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
@@ -88,6 +98,9 @@ func resourcePullQueueRead(d *schema.ResourceData, m interface{}) error {
 
 		return nil
 	}
+
+	d.Set("message_count", queueInfo.Size)
+	d.Set("message_count_total", queueInfo.TotalMessages)
 
 	return nil
 }

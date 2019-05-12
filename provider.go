@@ -33,8 +33,10 @@ func Provider() *schema.Provider {
 	return &schema.Provider{
 		ConfigureFunc: providerConfigure,
 		DataSourcesMap: map[string]*schema.Resource{
-			"ironio_projects": dataSourceProjects(),
-			"ironio_queues":   dataSourceQueues(),
+			"ironio_pull_queue": dataSourcePullQueue(),
+			"ironio_push_queue": dataSourcePushQueue(),
+			"ironio_projects":   dataSourceProjects(),
+			"ironio_queues":     dataSourceQueues(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"ironio_project":    resourceProject(),
@@ -105,7 +107,7 @@ func Provider() *schema.Provider {
 			ProviderConfigurationLoadConfigFileKey: {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     true,
+				Default:     false,
 				Description: "Whether to load the iron.json configuration file",
 			},
 			ProviderConfigurationMQKey: &schema.Schema{

@@ -18,6 +18,16 @@ func resourcePushQueue() *schema.Resource {
 				Description: "The name of an error queue",
 				Default:     "",
 			},
+			"message_count": &schema.Schema{
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The number of messages currently in the queue",
+			},
+			"message_count_total": &schema.Schema{
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The number of messages which have been processed by the queue",
+			},
 			"multicast": &schema.Schema{
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -156,38 +166,8 @@ func resourcePushQueueCreate(d *schema.ResourceData, m interface{}) error {
 	return resourcePushQueueRead(d, m)
 }
 
-// resourcePushQueueRead() reads information about an existing push queue.
-func resourcePushQueueRead(d *schema.ResourceData, m interface{}) error {
-	clientSettings := m.(ClientSettings)
-	clientSettingsMQ := config.Settings{}
-	clientSettingsMQ.UseSettings(&clientSettings.MQ)
-
-	projectID := d.State().Attributes["project_id"]
-	queueName := d.State().Attributes["name"]
-
-	if projectID != "" {
-		clientSettingsMQ.ProjectId = projectID
-	}
-
-	queue := mq.ConfigNew(queueName, &clientSettingsMQ)
-	queueInfo, err := queue.Info()
-
-	if err != nil {
-		if strings.Contains(err.Error(), "404") {
-			d.SetId("")
-
-			return nil
-		} else {
-			return err
-		}
-	}
-
-	if queueInfo.Type == "pull" {
-		d.SetId("")
-
-		return nil
-	}
-
+// resourcePushQueueParseInfo() parses information about an existing push queue.
+func resourcePushQueueParseInfo(d *schema.ResourceData, queueInfo *mq.QueueInfo) error {
 	if queueInfo.Type == "multicast" {
 		d.Set("multicast", true)
 	} else {
@@ -221,7 +201,45 @@ func resourcePushQueueRead(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 
+	d.Set("message_count", queueInfo.Size)
+	d.Set("message_count_total", queueInfo.TotalMessages)
+
 	return nil
+}
+
+// resourcePushQueueRead() reads information about an existing push queue.
+func resourcePushQueueRead(d *schema.ResourceData, m interface{}) error {
+	clientSettings := m.(ClientSettings)
+	clientSettingsMQ := config.Settings{}
+	clientSettingsMQ.UseSettings(&clientSettings.MQ)
+
+	projectID := d.State().Attributes["project_id"]
+	queueName := d.State().Attributes["name"]
+
+	if projectID != "" {
+		clientSettingsMQ.ProjectId = projectID
+	}
+
+	queue := mq.ConfigNew(queueName, &clientSettingsMQ)
+	queueInfo, err := queue.Info()
+
+	if err != nil {
+		if strings.Contains(err.Error(), "404") {
+			d.SetId("")
+
+			return nil
+		} else {
+			return err
+		}
+	}
+
+	if queueInfo.Type == "pull" {
+		d.SetId("")
+
+		return nil
+	}
+
+	return resourcePushQueueParseInfo(d, &queueInfo)
 }
 
 // resourcePushQueueUpdate() updates an existing push queue.

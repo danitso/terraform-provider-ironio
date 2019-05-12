@@ -35,12 +35,12 @@ If you're building the provider, follow the instructions to [install it as a plu
     * `host` - (Optional) This is the address of the IronAuth service. Defaults to `auth.iron.io`.
     * `port` - (Optional) This is the port number for the IronAuth service. Defaults to `443`.
     * `protocol` - (Optional) This is the protocol to use for IronAuth requests. Defaults to `https`.
-    * `token` - (Optional) This is the IronAuth token (OAuth). This is only optional as long as `load_config_file` is set to `true` and when the iron.json configuration file contains a valid token.
+    * `token` - (Optional) This is the IronAuth token (OAuth). This is only optional as long as `load_config_file` is set to `true` and when the `iron.json` configuration file contains a valid token.
 * `cache` - (Optional) This is the IronCache configuration block
     * `host` - (Optional) This is the address of the IronCache service. Defaults to `cache-aws-us-east-1.iron.io`.
     * `port` - (Optional) This is the port number for the IronCache service. Defaults to `443`.
     * `protocol` - (Optional) This is the protocol to use for IronCache requests. Defaults to `https`.
-* `load_config_file` - (Optional) This determines whether to load values from the JSON configuration file (iron.json). Defaults to `true`.
+* `load_config_file` - (Optional) This determines whether to load configuration values from the `iron.json` configuration file. Defaults to `false`.
 * `mq` - (Optional) This is the IronMQ configuration block
     * `host` - (Optional) This is the address of the IronMQ service. Defaults to `mq-aws-us-east-1-1.iron.io`.
     * `port` - (Optional) This is the port number for the IronMQ service. Defaults to `443`.
@@ -51,6 +51,38 @@ If you're building the provider, follow the instructions to [install it as a plu
     * `protocol` - (Optional) This is the protocol to use for IronWorker requests. Defaults to `https`.
 
 ## Data Sources
+
+### Pull Queue (ironio_pull_queue)
+
+#### Arguments
+
+* `name` - (Required) This is the name of the queue.
+* `project_id` - (Required) This is the id of the project to add the queue to.
+
+#### Attributes
+
+* `message_count` - This is the number of messages currently in the queue.
+* `message_count_total` - This is the number of messages which have been processed by the queue.
+
+### Push Queue (ironio_push_queue)
+
+#### Arguments
+
+* `name` - (Required) This is the name of the queue.
+* `project_id` - (Required) This is the id of the project to add the queue to.
+
+#### Attributes
+
+* `error_queue` - This is the name of an error queue.
+* `message_count` - This is the number of messages currently in the queue.
+* `message_count_total` - This is the number of messages which have been processed by the queue.
+* `multicast` - Whether to create a multicast queue instead of a unicast queue.
+* `retries` - This is the number of times to try to send a message to a subscriber before moving the message to the error queue.
+* `retries_delay` - This is the number of seconds to wait before retrying a failed message.
+* `subscriber` - This is the list of subscribers.
+    * `headers` - This is the headers to include when sending a message to the subscriber.
+    * `name` - This is the name of the subscriber.
+    * `url` - This is the URL for the subscriber.
 
 ### Projects (ironio_projects)
 
@@ -89,6 +121,11 @@ If you're building the provider, follow the instructions to [install it as a plu
 * `name` - (Required) This is the name of the queue.
 * `project_id` - (Required) This is the id of the project to add the queue to.
 
+#### Attributes
+
+* `message_count` - This is the number of messages currently in the queue.
+* `message_count_total` - This is the number of messages which have been processed by the queue.
+
 ### Push Queue (ironio_push_queue)
 
 #### Arguments
@@ -103,6 +140,11 @@ If you're building the provider, follow the instructions to [install it as a plu
     * `headers` - (Optional) This is the headers to include when sending a message to the subscriber. Defaults to `{}`.
     * `name` - (Optional) This is the name of the subscriber. Defaults to an empty string.
     * `url` - (Required) This is the URL for the subscriber.
+
+#### Attributes
+
+* `message_count` - This is the number of messages currently in the queue.
+* `message_count_total` - This is the number of messages which have been processed by the queue.
 
 # Developing the Provider
 If you wish to work on the provider, you'll first need [Go](http://www.golang.org) installed on your machine (version 1.12+ is *required*).

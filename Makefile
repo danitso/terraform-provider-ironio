@@ -9,6 +9,7 @@ build:
 	go build -o "bin/$(NAME)_v$(VERSION)-custom_x4"
 
 example:
+	rm -f "example/$(NAME)_v"*
 	go build -o "example/$(NAME)_v$(VERSION)-custom_x4"
 	@read -p "Enter IronAuth token: " token && \
 		cd ./example && \

@@ -9,7 +9,7 @@ data "ironio_queues" "example" {
   project_id  = "${ironio_project.example.id}"
 }
 
-output "ironio_queues_example_names" {
+output "data_ironio_queues_example_names" {
   description = "The queue names"
   value       = "${data.ironio_queues.example.names}"
 }
