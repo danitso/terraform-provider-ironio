@@ -11,38 +11,38 @@ import (
 	"github.com/iron-io/iron_go3/mq"
 )
 
-const DataSourceQueuesFilterKey = "filter"
-const DataSourceQueuesNameKey = "name"
-const DataSourceQueuesNamesKey = "names"
-const DataSourceQueuesPullKey = "pull"
-const DataSourceQueuesPushKey = "push"
-const DataSourceQueuesProjectIDKey = "project_id"
-const DataSourceQueuesTypesKey = "types"
+const dataSourceQueuesFilterKey = "filter"
+const dataSourceQueuesNameKey = "name"
+const dataSourceQueuesNamesKey = "names"
+const dataSourceQueuesPullKey = "pull"
+const dataSourceQueuesPushKey = "push"
+const dataSourceQueuesProjectIDKey = "project_id"
+const dataSourceQueuesTypesKey = "types"
 
-// dataSourceQueues() retrieves information about queues.
+// dataSourceQueues retrieves information about queues.
 func dataSourceQueues() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			DataSourceQueuesFilterKey: &schema.Schema{
+			dataSourceQueuesFilterKey: &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						DataSourceQueuesNameKey: &schema.Schema{
+						dataSourceQueuesNameKey: &schema.Schema{
 							Type:        schema.TypeString,
 							Optional:    true,
 							Default:     "",
 							Description: "The name filter",
 							ForceNew:    true,
 						},
-						DataSourceQueuesPullKey: &schema.Schema{
+						dataSourceQueuesPullKey: &schema.Schema{
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     true,
 							Description: "Whether to include pull queues",
 							ForceNew:    true,
 						},
-						DataSourceQueuesPushKey: &schema.Schema{
+						dataSourceQueuesPushKey: &schema.Schema{
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     true,
@@ -53,18 +53,18 @@ func dataSourceQueues() *schema.Resource {
 				},
 				MaxItems: 1,
 			},
-			DataSourceQueuesNamesKey: &schema.Schema{
+			dataSourceQueuesNamesKey: &schema.Schema{
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
-			DataSourceQueuesProjectIDKey: &schema.Schema{
+			dataSourceQueuesProjectIDKey: &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The project id",
 				ForceNew:    true,
 			},
-			DataSourceQueuesTypesKey: &schema.Schema{
+			dataSourceQueuesTypesKey: &schema.Schema{
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
@@ -80,10 +80,10 @@ func dataSourceQueuesRead(d *schema.ResourceData, m interface{}) error {
 	clientSettings := m.(ClientSettings)
 	clientSettingsMQ := config.Settings{}
 	clientSettingsMQ.UseSettings(&clientSettings.MQ)
-	clientSettingsMQ.ProjectId = d.Get(DataSourceQueuesProjectIDKey).(string)
+	clientSettingsMQ.ProjectId = d.Get(dataSourceQueuesProjectIDKey).(string)
 
 	// Prepare the filters.
-	filter := d.Get(DataSourceQueuesFilterKey).([]interface{})
+	filter := d.Get(dataSourceQueuesFilterKey).([]interface{})
 	filterName := ""
 	filterNameMode := 0
 	filterPull := true
@@ -91,9 +91,9 @@ func dataSourceQueuesRead(d *schema.ResourceData, m interface{}) error {
 
 	if len(filter) > 0 {
 		filterData := filter[0].(map[string]interface{})
-		filterName = filterData[DataSourceQueuesNameKey].(string)
-		filterPull = filterData[DataSourceQueuesPullKey].(bool)
-		filterPush = filterData[DataSourceQueuesPushKey].(bool)
+		filterName = filterData[dataSourceQueuesNameKey].(string)
+		filterPull = filterData[dataSourceQueuesPullKey].(bool)
+		filterPush = filterData[dataSourceQueuesPushKey].(bool)
 
 		if filterName != "" {
 			if len(filterName) >= 2 && strings.HasPrefix(filterName, "*") && strings.HasSuffix(filterName, "*") {
@@ -161,8 +161,8 @@ func dataSourceQueuesRead(d *schema.ResourceData, m interface{}) error {
 	h := sha256.New()
 	h.Write([]byte(strings.Join(names, ",")))
 
-	d.Set(DataSourceQueuesNamesKey, names)
-	d.Set(DataSourceQueuesTypesKey, types)
+	d.Set(dataSourceQueuesNamesKey, names)
+	d.Set(dataSourceQueuesTypesKey, types)
 
 	d.SetId(fmt.Sprintf("%x", h.Sum(nil)))
 

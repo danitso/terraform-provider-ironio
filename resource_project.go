@@ -9,13 +9,13 @@ import (
 	"github.com/iron-io/iron_go3/config"
 )
 
-const ResourceProjectNameKey = "name"
+const resourceProjectNameKey = "name"
 
-// resourceProject() manages projects.
+// resourceProject manages projects.
 func resourceProject() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			ResourceProjectNameKey: &schema.Schema{
+			resourceProjectNameKey: &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The name of the project",
@@ -29,14 +29,14 @@ func resourceProject() *schema.Resource {
 	}
 }
 
-// resourceProjectCreate() creates a project.
+// resourceProjectCreate creates a project.
 func resourceProjectCreate(d *schema.ResourceData, m interface{}) error {
 	clientSettings := m.(ClientSettings)
 	clientSettingsAuth := config.Settings{}
 	clientSettingsAuth.UseSettings(&clientSettings.Auth)
 
 	in := ProjectInfo{
-		Name: d.Get(ResourceProjectNameKey).(string),
+		Name: d.Get(resourceProjectNameKey).(string),
 	}
 
 	var out ProjectBody
@@ -82,7 +82,7 @@ func resourceProjectRead(d *schema.ResourceData, m interface{}) error {
 		return errors.New("Failed to retrieve the project name")
 	}
 
-	d.Set(ResourceProjectNameKey, out.Project.Name)
+	d.Set(resourceProjectNameKey, out.Project.Name)
 
 	return nil
 }
@@ -94,7 +94,7 @@ func resourceProjectUpdate(d *schema.ResourceData, m interface{}) error {
 	clientSettingsAuth.UseSettings(&clientSettings.Auth)
 
 	in := ProjectInfo{
-		Name: d.Get(ResourceProjectNameKey).(string),
+		Name: d.Get(resourceProjectNameKey).(string),
 	}
 
 	var out ProjectBody

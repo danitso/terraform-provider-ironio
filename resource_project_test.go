@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-// TestResourceProjectInstantiation() tests whether the resourceProject instance can be instantiated.
+// TestResourceProjectInstantiation tests whether the resourceProject instance can be instantiated.
 func TestResourceProjectInstantiation(t *testing.T) {
 	s := resourceProject()
 
@@ -13,15 +13,15 @@ func TestResourceProjectInstantiation(t *testing.T) {
 	}
 }
 
-// TestResourceProjectSchema() tests the resourceProject schema.
+// TestResourceProjectSchema tests the resourceProject schema.
 func TestResourceProjectSchema(t *testing.T) {
 	s := resourceProject()
 
-	if s.Schema[ResourceProjectNameKey] == nil {
-		t.Fatalf("Error in resourceProject.Schema: Missing argument \"%s\"", ResourceProjectNameKey)
+	if s.Schema[resourceProjectNameKey] == nil {
+		t.Fatalf("Error in resourceProject.Schema: Missing argument \"%s\"", resourceProjectNameKey)
 	}
 
-	if s.Schema[ResourceProjectNameKey].Required != true {
-		t.Fatalf("Error in resourceProject.Schema: Argument \"%s\" is not required", ResourceProjectNameKey)
+	if s.Schema[resourceProjectNameKey].Required != true {
+		t.Fatalf("Error in resourceProject.Schema: Argument \"%s\" is not required", resourceProjectNameKey)
 	}
 }

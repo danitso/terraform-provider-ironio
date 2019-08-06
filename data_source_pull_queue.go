@@ -8,32 +8,32 @@ import (
 	"github.com/iron-io/iron_go3/mq"
 )
 
-const DataSourcePullQueueMessageCountKey = "message_count"
-const DataSourcePullQueueMessageCountTotalKey = "message_count_total"
-const DataSourcePullQueueNameKey = "name"
-const DataSourcePullQueueProjectIDKey = "project_id"
+const dataSourcePullQueueMessageCountKey = "message_count"
+const dataSourcePullQueueMessageCountTotalKey = "message_count_total"
+const dataSourcePullQueueNameKey = "name"
+const dataSourcePullQueueProjectIDKey = "project_id"
 
-// dataSourcePullQueue() reads information about IronMQ pull queues.
+// dataSourcePullQueue reads information about IronMQ pull queues.
 func dataSourcePullQueue() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			DataSourcePullQueueMessageCountKey: &schema.Schema{
+			dataSourcePullQueueMessageCountKey: &schema.Schema{
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "The number of messages currently in the queue",
 			},
-			DataSourcePullQueueMessageCountTotalKey: &schema.Schema{
+			dataSourcePullQueueMessageCountTotalKey: &schema.Schema{
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "The number of messages which have been processed by the queue",
 			},
-			DataSourcePullQueueNameKey: &schema.Schema{
+			dataSourcePullQueueNameKey: &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The name of the queue",
 				ForceNew:    true,
 			},
-			DataSourcePullQueueProjectIDKey: &schema.Schema{
+			dataSourcePullQueueProjectIDKey: &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The project id",
@@ -45,14 +45,14 @@ func dataSourcePullQueue() *schema.Resource {
 	}
 }
 
-// dataSourcePullQueueRead() reads information about an existing pull queue.
+// dataSourcePullQueueRead reads information about an existing pull queue.
 func dataSourcePullQueueRead(d *schema.ResourceData, m interface{}) error {
 	clientSettings := m.(ClientSettings)
 	clientSettingsMQ := config.Settings{}
 	clientSettingsMQ.UseSettings(&clientSettings.MQ)
 
-	projectID := d.Get(DataSourcePullQueueProjectIDKey).(string)
-	queueName := d.Get(DataSourcePullQueueNameKey).(string)
+	projectID := d.Get(dataSourcePullQueueProjectIDKey).(string)
+	queueName := d.Get(dataSourcePullQueueNameKey).(string)
 
 	clientSettingsMQ.ProjectId = projectID
 
@@ -75,8 +75,8 @@ func dataSourcePullQueueRead(d *schema.ResourceData, m interface{}) error {
 		return nil
 	}
 
-	d.Set(DataSourcePullQueueMessageCountKey, queueInfo.Size)
-	d.Set(DataSourcePullQueueMessageCountTotalKey, queueInfo.TotalMessages)
+	d.Set(dataSourcePullQueueMessageCountKey, queueInfo.Size)
+	d.Set(dataSourcePullQueueMessageCountTotalKey, queueInfo.TotalMessages)
 
 	d.SetId(queueNameToID(clientSettingsMQ.ProjectId, queueName))
 

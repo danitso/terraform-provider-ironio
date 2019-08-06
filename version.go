@@ -1,4 +1,9 @@
 package main
 
-var TerraformProviderName = "terraform-provider-ironio"
-var TerraformProviderVersion = "0.2.1"
+const (
+	// TerraformProviderName specifies the full name of this provider.
+	TerraformProviderName = "terraform-provider-ironio"
+
+	// TerraformProviderVersion specifies the version number.
+	TerraformProviderVersion = "0.2.1"
+)

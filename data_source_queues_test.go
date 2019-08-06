@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-// TestDataSourceQueuesInstantiation() tests whether the dataSourceQueues instance can be instantiated.
+// TestDataSourceQueuesInstantiation tests whether the dataSourceQueues instance can be instantiated.
 func TestDataSourceQueuesInstantiation(t *testing.T) {
 	s := dataSourceQueues()
 
@@ -15,86 +15,86 @@ func TestDataSourceQueuesInstantiation(t *testing.T) {
 	}
 }
 
-// TestDataSourceQueuesSchema() tests the dataSourceQueues schema.
+// TestDataSourceQueuesSchema tests the dataSourceQueues schema.
 func TestDataSourceQueuesSchema(t *testing.T) {
 	s := dataSourceQueues()
 
-	if s.Schema[DataSourceQueuesNamesKey] == nil {
-		t.Fatalf("Error in dataSourceQueues.Schema: Missing attribute \"%s\"", DataSourceQueuesNamesKey)
+	if s.Schema[dataSourceQueuesNamesKey] == nil {
+		t.Fatalf("Error in dataSourceQueues.Schema: Missing attribute \"%s\"", dataSourceQueuesNamesKey)
 	}
 
-	if s.Schema[DataSourceQueuesNamesKey].Computed != true {
-		t.Fatalf("Error in dataSourceQueues.Schema: Attribute \"%s\" is not computed", DataSourceQueuesNamesKey)
+	if s.Schema[dataSourceQueuesNamesKey].Computed != true {
+		t.Fatalf("Error in dataSourceQueues.Schema: Attribute \"%s\" is not computed", dataSourceQueuesNamesKey)
 	}
 
-	if s.Schema[DataSourceQueuesTypesKey] == nil {
-		t.Fatalf("Error in dataSourceQueues.Schema: Missing attribute \"%s\"", DataSourceQueuesNamesKey)
+	if s.Schema[dataSourceQueuesTypesKey] == nil {
+		t.Fatalf("Error in dataSourceQueues.Schema: Missing attribute \"%s\"", dataSourceQueuesNamesKey)
 	}
 
-	if s.Schema[DataSourceQueuesTypesKey].Computed != true {
-		t.Fatalf("Error in dataSourceQueues.Schema: Attribute \"%s\" is not computed", DataSourceQueuesNamesKey)
+	if s.Schema[dataSourceQueuesTypesKey].Computed != true {
+		t.Fatalf("Error in dataSourceQueues.Schema: Attribute \"%s\" is not computed", dataSourceQueuesNamesKey)
 	}
 }
 
-// TestDataSourceQueuesSchemaFilter() tests the dataSourceQueues.Filter schema.
+// TestDataSourceQueuesSchemaFilter tests the dataSourceQueues.Filter schema.
 func TestDataSourceQueuesSchemaFilter(t *testing.T) {
 	s := dataSourceQueues()
 
-	if s.Schema[DataSourceQueuesFilterKey] == nil {
-		t.Fatalf("Error in dataSourceQueues.Schema: Missing block \"%s\"", DataSourceQueuesFilterKey)
+	if s.Schema[dataSourceQueuesFilterKey] == nil {
+		t.Fatalf("Error in dataSourceQueues.Schema: Missing block \"%s\"", dataSourceQueuesFilterKey)
 	}
 
-	if s.Schema[DataSourceQueuesFilterKey].Optional != true {
-		t.Fatalf("Error in dataSourceQueues.Schema: Block \"%s\" is not optional", DataSourceQueuesFilterKey)
+	if s.Schema[dataSourceQueuesFilterKey].Optional != true {
+		t.Fatalf("Error in dataSourceQueues.Schema: Block \"%s\" is not optional", dataSourceQueuesFilterKey)
 	}
 
-	if s.Schema[DataSourceQueuesFilterKey].Type != schema.TypeList {
-		t.Fatalf("Error in dataSourceQueues.Schema: Block \"%s\" is not a list", DataSourceQueuesFilterKey)
+	if s.Schema[dataSourceQueuesFilterKey].Type != schema.TypeList {
+		t.Fatalf("Error in dataSourceQueues.Schema: Block \"%s\" is not a list", dataSourceQueuesFilterKey)
 	}
 
-	if s.Schema[DataSourceQueuesFilterKey].MaxItems != 1 {
-		t.Fatalf("Error in dataSourceQueues.Schema: Block \"%s\" is not limited to a single definition", DataSourceQueuesFilterKey)
+	if s.Schema[dataSourceQueuesFilterKey].MaxItems != 1 {
+		t.Fatalf("Error in dataSourceQueues.Schema: Block \"%s\" is not limited to a single definition", dataSourceQueuesFilterKey)
 	}
 
-	if s.Schema[DataSourceQueuesFilterKey].Elem == nil {
-		t.Fatalf("Error in dataSourceQueues.Schema: Missing element for block \"%s\"", DataSourceQueuesFilterKey)
+	if s.Schema[dataSourceQueuesFilterKey].Elem == nil {
+		t.Fatalf("Error in dataSourceQueues.Schema: Missing element for block \"%s\"", dataSourceQueuesFilterKey)
 	}
 
-	blockElement, blockElementCasted := s.Schema[DataSourceQueuesFilterKey].Elem.(*schema.Resource)
+	blockElement, blockElementCasted := s.Schema[dataSourceQueuesFilterKey].Elem.(*schema.Resource)
 
 	if !blockElementCasted {
-		t.Fatalf("Error in dataSourceQueues.Schema: Element for block \"%s\" is not a pointer to schema.Resource", DataSourceQueuesFilterKey)
+		t.Fatalf("Error in dataSourceQueues.Schema: Element for block \"%s\" is not a pointer to schema.Resource", dataSourceQueuesFilterKey)
 	}
 
-	if blockElement.Schema[DataSourceQueuesNameKey] == nil {
-		t.Fatalf("Error in dataSourceQueues.Schema.subscriber: Missing argument \"%s\"", DataSourceQueuesNameKey)
+	if blockElement.Schema[dataSourceQueuesNameKey] == nil {
+		t.Fatalf("Error in dataSourceQueues.Schema.subscriber: Missing argument \"%s\"", dataSourceQueuesNameKey)
 	}
 
-	if blockElement.Schema[DataSourceQueuesNameKey].Optional != true {
-		t.Fatalf("Error in dataSourceQueues.Schema.subscriber: Argument \"%s\" is not optional", DataSourceQueuesNameKey)
+	if blockElement.Schema[dataSourceQueuesNameKey].Optional != true {
+		t.Fatalf("Error in dataSourceQueues.Schema.subscriber: Argument \"%s\" is not optional", dataSourceQueuesNameKey)
 	}
 
-	if blockElement.Schema[DataSourceQueuesPullKey] == nil {
-		t.Fatalf("Error in dataSourceQueues.Schema.subscriber: Missing argument \"%s\"", DataSourceQueuesPullKey)
+	if blockElement.Schema[dataSourceQueuesPullKey] == nil {
+		t.Fatalf("Error in dataSourceQueues.Schema.subscriber: Missing argument \"%s\"", dataSourceQueuesPullKey)
 	}
 
-	if blockElement.Schema[DataSourceQueuesPullKey].Optional != true {
-		t.Fatalf("Error in dataSourceQueues.Schema.subscriber: Argument \"%s\" is not optional", DataSourceQueuesPullKey)
+	if blockElement.Schema[dataSourceQueuesPullKey].Optional != true {
+		t.Fatalf("Error in dataSourceQueues.Schema.subscriber: Argument \"%s\" is not optional", dataSourceQueuesPullKey)
 	}
 
-	if blockElement.Schema[DataSourceQueuesPullKey].Type != schema.TypeBool {
-		t.Fatalf("Error in dataSourceQueues.Schema.subscriber: Argument \"%s\" is not limited to booleans", DataSourceQueuesPullKey)
+	if blockElement.Schema[dataSourceQueuesPullKey].Type != schema.TypeBool {
+		t.Fatalf("Error in dataSourceQueues.Schema.subscriber: Argument \"%s\" is not limited to booleans", dataSourceQueuesPullKey)
 	}
 
-	if blockElement.Schema[DataSourceQueuesPushKey] == nil {
-		t.Fatalf("Error in dataSourceQueues.Schema.subscriber: Missing argument \"%s\"", DataSourceQueuesPushKey)
+	if blockElement.Schema[dataSourceQueuesPushKey] == nil {
+		t.Fatalf("Error in dataSourceQueues.Schema.subscriber: Missing argument \"%s\"", dataSourceQueuesPushKey)
 	}
 
-	if blockElement.Schema[DataSourceQueuesPushKey].Optional != true {
-		t.Fatalf("Error in dataSourceQueues.Schema.subscriber: Argument \"%s\" is not optional", DataSourceQueuesPushKey)
+	if blockElement.Schema[dataSourceQueuesPushKey].Optional != true {
+		t.Fatalf("Error in dataSourceQueues.Schema.subscriber: Argument \"%s\" is not optional", dataSourceQueuesPushKey)
 	}
 
-	if blockElement.Schema[DataSourceQueuesPushKey].Type != schema.TypeBool {
-		t.Fatalf("Error in dataSourceQueues.Schema.subscriber: Argument \"%s\" is not limited to booleans", DataSourceQueuesPushKey)
+	if blockElement.Schema[dataSourceQueuesPushKey].Type != schema.TypeBool {
+		t.Fatalf("Error in dataSourceQueues.Schema.subscriber: Argument \"%s\" is not limited to booleans", dataSourceQueuesPushKey)
 	}
 }

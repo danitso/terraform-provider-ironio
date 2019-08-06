@@ -2,7 +2,17 @@ package main
 
 import (
 	"time"
+
+	"github.com/iron-io/iron_go3/config"
 )
+
+// ClientSettings contains the settings for each Iron.io product.
+type ClientSettings struct {
+	Auth   config.Settings
+	Cache  config.Settings
+	MQ     config.Settings
+	Worker config.Settings
+}
 
 // ProjectBody describes a project payload.
 type ProjectBody struct {

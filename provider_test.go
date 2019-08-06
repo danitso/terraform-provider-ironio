@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-// TestProviderInstantiation() tests whether the Provider instance can be instantiated.
+// TestProviderInstantiation tests whether the Provider instance can be instantiated.
 func TestProviderInstantiation(t *testing.T) {
 	s := Provider()
 
@@ -15,255 +15,255 @@ func TestProviderInstantiation(t *testing.T) {
 	}
 }
 
-// TestProviderConfiguration() tests the Provider schema.
+// TestProviderConfiguration tests the Provider schema.
 func TestProviderSchema(t *testing.T) {
 	s := Provider()
 
-	if s.Schema[ProviderConfigurationLoadConfigFileKey] == nil {
-		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\"", ProviderConfigurationLoadConfigFileKey)
+	if s.Schema[providerConfigurationLoadConfigFileKey] == nil {
+		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\"", providerConfigurationLoadConfigFileKey)
 	}
 }
 
-// TestProviderSchemaAuth() tests the IronAuth schema.
+// TestProviderSchemaAuth tests the IronAuth schema.
 func TestProviderSchemaAuth(t *testing.T) {
 	s := Provider()
 
-	if s.Schema[ProviderConfigurationAuthKey] == nil {
-		t.Fatalf("Error in Provider.Schema: Missing block \"%s\"", ProviderConfigurationAuthKey)
+	if s.Schema[providerConfigurationAuthKey] == nil {
+		t.Fatalf("Error in Provider.Schema: Missing block \"%s\"", providerConfigurationAuthKey)
 	}
 
-	if s.Schema[ProviderConfigurationAuthKey].Optional != true {
-		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not optional", ProviderConfigurationAuthKey)
+	if s.Schema[providerConfigurationAuthKey].Optional != true {
+		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not optional", providerConfigurationAuthKey)
 	}
 
-	if s.Schema[ProviderConfigurationAuthKey].Type != schema.TypeList {
-		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not a list", ProviderConfigurationAuthKey)
+	if s.Schema[providerConfigurationAuthKey].Type != schema.TypeList {
+		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not a list", providerConfigurationAuthKey)
 	}
 
-	if s.Schema[ProviderConfigurationAuthKey].MaxItems != 1 {
-		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not limited to a single definition", ProviderConfigurationAuthKey)
+	if s.Schema[providerConfigurationAuthKey].MaxItems != 1 {
+		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not limited to a single definition", providerConfigurationAuthKey)
 	}
 
-	if s.Schema[ProviderConfigurationAuthKey].Elem == nil {
-		t.Fatalf("Error in Provider.Schema: Missing element for block \"%s\"", ProviderConfigurationAuthKey)
+	if s.Schema[providerConfigurationAuthKey].Elem == nil {
+		t.Fatalf("Error in Provider.Schema: Missing element for block \"%s\"", providerConfigurationAuthKey)
 	}
 
-	blockElement, blockElementCasted := s.Schema[ProviderConfigurationAuthKey].Elem.(*schema.Resource)
+	blockElement, blockElementCasted := s.Schema[providerConfigurationAuthKey].Elem.(*schema.Resource)
 
 	if !blockElementCasted {
-		t.Fatalf("Error in Provider.Schema: Element for block \"%s\" is not a pointer to schema.Resource", ProviderConfigurationAuthKey)
+		t.Fatalf("Error in Provider.Schema: Element for block \"%s\" is not a pointer to schema.Resource", providerConfigurationAuthKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationHostKey] == nil {
-		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", ProviderConfigurationHostKey, ProviderConfigurationAuthKey)
+	if blockElement.Schema[providerConfigurationHostKey] == nil {
+		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", providerConfigurationHostKey, providerConfigurationAuthKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationHostKey].Optional != true {
-		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", ProviderConfigurationHostKey, ProviderConfigurationAuthKey)
+	if blockElement.Schema[providerConfigurationHostKey].Optional != true {
+		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", providerConfigurationHostKey, providerConfigurationAuthKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationPortKey] == nil {
-		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", ProviderConfigurationPortKey, ProviderConfigurationAuthKey)
+	if blockElement.Schema[providerConfigurationPortKey] == nil {
+		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", providerConfigurationPortKey, providerConfigurationAuthKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationPortKey].Optional != true {
-		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", ProviderConfigurationPortKey, ProviderConfigurationAuthKey)
+	if blockElement.Schema[providerConfigurationPortKey].Optional != true {
+		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", providerConfigurationPortKey, providerConfigurationAuthKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationPortKey].Type != schema.TypeInt {
-		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not limited to integers", ProviderConfigurationPortKey, ProviderConfigurationAuthKey)
+	if blockElement.Schema[providerConfigurationPortKey].Type != schema.TypeInt {
+		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not limited to integers", providerConfigurationPortKey, providerConfigurationAuthKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationProtocolKey] == nil {
-		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", ProviderConfigurationProtocolKey, ProviderConfigurationAuthKey)
+	if blockElement.Schema[providerConfigurationProtocolKey] == nil {
+		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", providerConfigurationProtocolKey, providerConfigurationAuthKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationProtocolKey].Optional != true {
-		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", ProviderConfigurationProtocolKey, ProviderConfigurationAuthKey)
+	if blockElement.Schema[providerConfigurationProtocolKey].Optional != true {
+		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", providerConfigurationProtocolKey, providerConfigurationAuthKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationTokenKey] == nil {
-		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", ProviderConfigurationTokenKey, ProviderConfigurationAuthKey)
+	if blockElement.Schema[providerConfigurationTokenKey] == nil {
+		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", providerConfigurationTokenKey, providerConfigurationAuthKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationTokenKey].Optional != true {
-		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", ProviderConfigurationTokenKey, ProviderConfigurationAuthKey)
+	if blockElement.Schema[providerConfigurationTokenKey].Optional != true {
+		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", providerConfigurationTokenKey, providerConfigurationAuthKey)
 	}
 }
 
-// TestProviderSchemaCache() tests the IronCache schema.
+// TestProviderSchemaCache tests the IronCache schema.
 func TestProviderSchemaCache(t *testing.T) {
 	s := Provider()
 
-	if s.Schema[ProviderConfigurationCacheKey] == nil {
-		t.Fatalf("Error in Provider.Schema: Missing block \"%s\"", ProviderConfigurationCacheKey)
+	if s.Schema[providerConfigurationCacheKey] == nil {
+		t.Fatalf("Error in Provider.Schema: Missing block \"%s\"", providerConfigurationCacheKey)
 	}
 
-	if s.Schema[ProviderConfigurationCacheKey].Optional != true {
-		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not optional", ProviderConfigurationCacheKey)
+	if s.Schema[providerConfigurationCacheKey].Optional != true {
+		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not optional", providerConfigurationCacheKey)
 	}
 
-	if s.Schema[ProviderConfigurationCacheKey].Type != schema.TypeList {
-		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not a list", ProviderConfigurationCacheKey)
+	if s.Schema[providerConfigurationCacheKey].Type != schema.TypeList {
+		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not a list", providerConfigurationCacheKey)
 	}
 
-	if s.Schema[ProviderConfigurationCacheKey].MaxItems != 1 {
-		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not limited to a single definition", ProviderConfigurationCacheKey)
+	if s.Schema[providerConfigurationCacheKey].MaxItems != 1 {
+		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not limited to a single definition", providerConfigurationCacheKey)
 	}
 
-	if s.Schema[ProviderConfigurationCacheKey].Elem == nil {
-		t.Fatalf("Error in Provider.Schema: Missing element for block \"%s\"", ProviderConfigurationCacheKey)
+	if s.Schema[providerConfigurationCacheKey].Elem == nil {
+		t.Fatalf("Error in Provider.Schema: Missing element for block \"%s\"", providerConfigurationCacheKey)
 	}
 
-	blockElement, blockElementCasted := s.Schema[ProviderConfigurationCacheKey].Elem.(*schema.Resource)
+	blockElement, blockElementCasted := s.Schema[providerConfigurationCacheKey].Elem.(*schema.Resource)
 
 	if !blockElementCasted {
-		t.Fatalf("Error in Provider.Schema: Element for block \"%s\" is not a pointer to schema.Resource", ProviderConfigurationCacheKey)
+		t.Fatalf("Error in Provider.Schema: Element for block \"%s\" is not a pointer to schema.Resource", providerConfigurationCacheKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationHostKey] == nil {
-		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", ProviderConfigurationHostKey, ProviderConfigurationCacheKey)
+	if blockElement.Schema[providerConfigurationHostKey] == nil {
+		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", providerConfigurationHostKey, providerConfigurationCacheKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationHostKey].Optional != true {
-		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", ProviderConfigurationHostKey, ProviderConfigurationCacheKey)
+	if blockElement.Schema[providerConfigurationHostKey].Optional != true {
+		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", providerConfigurationHostKey, providerConfigurationCacheKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationPortKey] == nil {
-		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", ProviderConfigurationPortKey, ProviderConfigurationCacheKey)
+	if blockElement.Schema[providerConfigurationPortKey] == nil {
+		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", providerConfigurationPortKey, providerConfigurationCacheKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationPortKey].Optional != true {
-		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", ProviderConfigurationPortKey, ProviderConfigurationCacheKey)
+	if blockElement.Schema[providerConfigurationPortKey].Optional != true {
+		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", providerConfigurationPortKey, providerConfigurationCacheKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationPortKey].Type != schema.TypeInt {
-		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not limited to integers", ProviderConfigurationPortKey, ProviderConfigurationCacheKey)
+	if blockElement.Schema[providerConfigurationPortKey].Type != schema.TypeInt {
+		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not limited to integers", providerConfigurationPortKey, providerConfigurationCacheKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationProtocolKey] == nil {
-		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", ProviderConfigurationProtocolKey, ProviderConfigurationCacheKey)
+	if blockElement.Schema[providerConfigurationProtocolKey] == nil {
+		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", providerConfigurationProtocolKey, providerConfigurationCacheKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationProtocolKey].Optional != true {
-		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", ProviderConfigurationProtocolKey, ProviderConfigurationCacheKey)
+	if blockElement.Schema[providerConfigurationProtocolKey].Optional != true {
+		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", providerConfigurationProtocolKey, providerConfigurationCacheKey)
 	}
 }
 
-// TestProviderSchemaMQ() tests the IronMQ schema.
+// TestProviderSchemaMQ tests the IronMQ schema.
 func TestProviderSchemaMQ(t *testing.T) {
 	s := Provider()
 
-	if s.Schema[ProviderConfigurationMQKey] == nil {
-		t.Fatalf("Error in Provider.Schema: Missing block \"%s\"", ProviderConfigurationMQKey)
+	if s.Schema[providerConfigurationMQKey] == nil {
+		t.Fatalf("Error in Provider.Schema: Missing block \"%s\"", providerConfigurationMQKey)
 	}
 
-	if s.Schema[ProviderConfigurationMQKey].Optional != true {
-		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not optional", ProviderConfigurationMQKey)
+	if s.Schema[providerConfigurationMQKey].Optional != true {
+		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not optional", providerConfigurationMQKey)
 	}
 
-	if s.Schema[ProviderConfigurationMQKey].Type != schema.TypeList {
-		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not a list", ProviderConfigurationMQKey)
+	if s.Schema[providerConfigurationMQKey].Type != schema.TypeList {
+		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not a list", providerConfigurationMQKey)
 	}
 
-	if s.Schema[ProviderConfigurationMQKey].MaxItems != 1 {
-		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not limited to a single definition", ProviderConfigurationMQKey)
+	if s.Schema[providerConfigurationMQKey].MaxItems != 1 {
+		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not limited to a single definition", providerConfigurationMQKey)
 	}
 
-	if s.Schema[ProviderConfigurationMQKey].Elem == nil {
-		t.Fatalf("Error in Provider.Schema: Missing element for block \"%s\"", ProviderConfigurationMQKey)
+	if s.Schema[providerConfigurationMQKey].Elem == nil {
+		t.Fatalf("Error in Provider.Schema: Missing element for block \"%s\"", providerConfigurationMQKey)
 	}
 
-	blockElement, blockElementCasted := s.Schema[ProviderConfigurationMQKey].Elem.(*schema.Resource)
+	blockElement, blockElementCasted := s.Schema[providerConfigurationMQKey].Elem.(*schema.Resource)
 
 	if !blockElementCasted {
-		t.Fatalf("Error in Provider.Schema: Element for block \"%s\" is not a pointer to schema.Resource", ProviderConfigurationMQKey)
+		t.Fatalf("Error in Provider.Schema: Element for block \"%s\" is not a pointer to schema.Resource", providerConfigurationMQKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationHostKey] == nil {
-		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", ProviderConfigurationHostKey, ProviderConfigurationMQKey)
+	if blockElement.Schema[providerConfigurationHostKey] == nil {
+		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", providerConfigurationHostKey, providerConfigurationMQKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationHostKey].Optional != true {
-		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", ProviderConfigurationHostKey, ProviderConfigurationMQKey)
+	if blockElement.Schema[providerConfigurationHostKey].Optional != true {
+		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", providerConfigurationHostKey, providerConfigurationMQKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationPortKey] == nil {
-		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", ProviderConfigurationPortKey, ProviderConfigurationMQKey)
+	if blockElement.Schema[providerConfigurationPortKey] == nil {
+		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", providerConfigurationPortKey, providerConfigurationMQKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationPortKey].Optional != true {
-		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", ProviderConfigurationPortKey, ProviderConfigurationMQKey)
+	if blockElement.Schema[providerConfigurationPortKey].Optional != true {
+		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", providerConfigurationPortKey, providerConfigurationMQKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationPortKey].Type != schema.TypeInt {
-		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not limited to integers", ProviderConfigurationPortKey, ProviderConfigurationMQKey)
+	if blockElement.Schema[providerConfigurationPortKey].Type != schema.TypeInt {
+		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not limited to integers", providerConfigurationPortKey, providerConfigurationMQKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationProtocolKey] == nil {
-		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", ProviderConfigurationProtocolKey, ProviderConfigurationMQKey)
+	if blockElement.Schema[providerConfigurationProtocolKey] == nil {
+		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", providerConfigurationProtocolKey, providerConfigurationMQKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationProtocolKey].Optional != true {
-		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", ProviderConfigurationProtocolKey, ProviderConfigurationMQKey)
+	if blockElement.Schema[providerConfigurationProtocolKey].Optional != true {
+		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", providerConfigurationProtocolKey, providerConfigurationMQKey)
 	}
 }
 
-// TestProviderSchemaWorker() tests the IronWorker schema.
+// TestProviderSchemaWorker tests the IronWorker schema.
 func TestProviderSchemaWorker(t *testing.T) {
 	s := Provider()
 
-	if s.Schema[ProviderConfigurationWorkerKey] == nil {
-		t.Fatalf("Error in Provider.Schema: Missing block \"%s\"", ProviderConfigurationWorkerKey)
+	if s.Schema[providerConfigurationWorkerKey] == nil {
+		t.Fatalf("Error in Provider.Schema: Missing block \"%s\"", providerConfigurationWorkerKey)
 	}
 
-	if s.Schema[ProviderConfigurationWorkerKey].Optional != true {
-		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not optional", ProviderConfigurationWorkerKey)
+	if s.Schema[providerConfigurationWorkerKey].Optional != true {
+		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not optional", providerConfigurationWorkerKey)
 	}
 
-	if s.Schema[ProviderConfigurationWorkerKey].Type != schema.TypeList {
-		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not a list", ProviderConfigurationWorkerKey)
+	if s.Schema[providerConfigurationWorkerKey].Type != schema.TypeList {
+		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not a list", providerConfigurationWorkerKey)
 	}
 
-	if s.Schema[ProviderConfigurationWorkerKey].MaxItems != 1 {
-		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not limited to a single definition", ProviderConfigurationWorkerKey)
+	if s.Schema[providerConfigurationWorkerKey].MaxItems != 1 {
+		t.Fatalf("Error in Provider.Schema: Block \"%s\" is not limited to a single definition", providerConfigurationWorkerKey)
 	}
 
-	if s.Schema[ProviderConfigurationWorkerKey].Elem == nil {
-		t.Fatalf("Error in Provider.Schema: Missing element for block \"%s\"", ProviderConfigurationWorkerKey)
+	if s.Schema[providerConfigurationWorkerKey].Elem == nil {
+		t.Fatalf("Error in Provider.Schema: Missing element for block \"%s\"", providerConfigurationWorkerKey)
 	}
 
-	blockElement, blockElementCasted := s.Schema[ProviderConfigurationWorkerKey].Elem.(*schema.Resource)
+	blockElement, blockElementCasted := s.Schema[providerConfigurationWorkerKey].Elem.(*schema.Resource)
 
 	if !blockElementCasted {
-		t.Fatalf("Error in Provider.Schema: Element for block \"%s\" is not a pointer to schema.Resource", ProviderConfigurationWorkerKey)
+		t.Fatalf("Error in Provider.Schema: Element for block \"%s\" is not a pointer to schema.Resource", providerConfigurationWorkerKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationHostKey] == nil {
-		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", ProviderConfigurationHostKey, ProviderConfigurationWorkerKey)
+	if blockElement.Schema[providerConfigurationHostKey] == nil {
+		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", providerConfigurationHostKey, providerConfigurationWorkerKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationHostKey].Optional != true {
-		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", ProviderConfigurationHostKey, ProviderConfigurationWorkerKey)
+	if blockElement.Schema[providerConfigurationHostKey].Optional != true {
+		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", providerConfigurationHostKey, providerConfigurationWorkerKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationPortKey] == nil {
-		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", ProviderConfigurationPortKey, ProviderConfigurationWorkerKey)
+	if blockElement.Schema[providerConfigurationPortKey] == nil {
+		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", providerConfigurationPortKey, providerConfigurationWorkerKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationPortKey].Optional != true {
-		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", ProviderConfigurationPortKey, ProviderConfigurationWorkerKey)
+	if blockElement.Schema[providerConfigurationPortKey].Optional != true {
+		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", providerConfigurationPortKey, providerConfigurationWorkerKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationPortKey].Type != schema.TypeInt {
-		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not limited to integers", ProviderConfigurationPortKey, ProviderConfigurationWorkerKey)
+	if blockElement.Schema[providerConfigurationPortKey].Type != schema.TypeInt {
+		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not limited to integers", providerConfigurationPortKey, providerConfigurationWorkerKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationProtocolKey] == nil {
-		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", ProviderConfigurationProtocolKey, ProviderConfigurationWorkerKey)
+	if blockElement.Schema[providerConfigurationProtocolKey] == nil {
+		t.Fatalf("Error in Provider.Schema: Missing argument \"%s\" for block \"%s\"", providerConfigurationProtocolKey, providerConfigurationWorkerKey)
 	}
 
-	if blockElement.Schema[ProviderConfigurationProtocolKey].Optional != true {
-		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", ProviderConfigurationProtocolKey, ProviderConfigurationWorkerKey)
+	if blockElement.Schema[providerConfigurationProtocolKey].Optional != true {
+		t.Fatalf("Error in Provider.Schema: Argument \"%s\" for block \"%s\" is not optional", providerConfigurationProtocolKey, providerConfigurationWorkerKey)
 	}
 }

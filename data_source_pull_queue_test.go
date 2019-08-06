@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-// TestDataSourcePullQueueInstantiation() tests whether the dataSourcePullQueue instance can be instantiated.
+// TestDataSourcePullQueueInstantiation tests whether the dataSourcePullQueue instance can be instantiated.
 func TestDataSourcePullQueueInstantiation(t *testing.T) {
 	s := dataSourcePullQueue()
 
@@ -13,39 +13,39 @@ func TestDataSourcePullQueueInstantiation(t *testing.T) {
 	}
 }
 
-// TestDataSourcePullQueueSchema() tests the dataSourcePullQueue schema.
+// TestDataSourcePullQueueSchema tests the dataSourcePullQueue schema.
 func TestDataSourcePullQueueSchema(t *testing.T) {
 	s := dataSourcePullQueue()
 
-	if s.Schema[DataSourcePullQueueMessageCountKey] == nil {
-		t.Fatalf("Error in dataSourcePullQueue.Schema: Missing attribute \"%s\"", DataSourcePullQueueMessageCountKey)
+	if s.Schema[dataSourcePullQueueMessageCountKey] == nil {
+		t.Fatalf("Error in dataSourcePullQueue.Schema: Missing attribute \"%s\"", dataSourcePullQueueMessageCountKey)
 	}
 
-	if s.Schema[DataSourcePullQueueMessageCountKey].Computed != true {
-		t.Fatalf("Error in dataSourcePullQueue.Schema: Attribute \"%s\" is not computed", DataSourcePullQueueMessageCountKey)
+	if s.Schema[dataSourcePullQueueMessageCountKey].Computed != true {
+		t.Fatalf("Error in dataSourcePullQueue.Schema: Attribute \"%s\" is not computed", dataSourcePullQueueMessageCountKey)
 	}
 
-	if s.Schema[DataSourcePullQueueMessageCountTotalKey] == nil {
-		t.Fatalf("Error in dataSourcePullQueue.Schema: Missing attribute \"%s\"", DataSourcePullQueueMessageCountTotalKey)
+	if s.Schema[dataSourcePullQueueMessageCountTotalKey] == nil {
+		t.Fatalf("Error in dataSourcePullQueue.Schema: Missing attribute \"%s\"", dataSourcePullQueueMessageCountTotalKey)
 	}
 
-	if s.Schema[DataSourcePullQueueMessageCountTotalKey].Computed != true {
-		t.Fatalf("Error in dataSourcePullQueue.Schema: Attribute \"%s\" is not computed", DataSourcePullQueueMessageCountTotalKey)
+	if s.Schema[dataSourcePullQueueMessageCountTotalKey].Computed != true {
+		t.Fatalf("Error in dataSourcePullQueue.Schema: Attribute \"%s\" is not computed", dataSourcePullQueueMessageCountTotalKey)
 	}
 
-	if s.Schema[DataSourcePullQueueNameKey] == nil {
-		t.Fatalf("Error in dataSourcePullQueue.Schema: Missing argument \"%s\"", DataSourcePullQueueNameKey)
+	if s.Schema[dataSourcePullQueueNameKey] == nil {
+		t.Fatalf("Error in dataSourcePullQueue.Schema: Missing argument \"%s\"", dataSourcePullQueueNameKey)
 	}
 
-	if s.Schema[DataSourcePullQueueNameKey].Required != true {
-		t.Fatalf("Error in dataSourcePullQueue.Schema: Argument \"%s\" is not required", DataSourcePullQueueNameKey)
+	if s.Schema[dataSourcePullQueueNameKey].Required != true {
+		t.Fatalf("Error in dataSourcePullQueue.Schema: Argument \"%s\" is not required", dataSourcePullQueueNameKey)
 	}
 
-	if s.Schema[DataSourcePullQueueProjectIDKey] == nil {
-		t.Fatalf("Error in dataSourcePullQueue.Schema: Missing argument \"%s\"", DataSourcePullQueueProjectIDKey)
+	if s.Schema[dataSourcePullQueueProjectIDKey] == nil {
+		t.Fatalf("Error in dataSourcePullQueue.Schema: Missing argument \"%s\"", dataSourcePullQueueProjectIDKey)
 	}
 
-	if s.Schema[DataSourcePullQueueProjectIDKey].Required != true {
-		t.Fatalf("Error in dataSourcePullQueue.Schema: Argument \"%s\" is not required", DataSourcePullQueueNameKey)
+	if s.Schema[dataSourcePullQueueProjectIDKey].Required != true {
+		t.Fatalf("Error in dataSourcePullQueue.Schema: Argument \"%s\" is not required", dataSourcePullQueueNameKey)
 	}
 }

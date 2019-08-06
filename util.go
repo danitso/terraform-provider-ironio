@@ -9,7 +9,7 @@ import (
 	"github.com/iron-io/iron_go3/config"
 )
 
-// getProjectsURL() returns a URL for all projects or a specific one.
+// getProjectsURL returns a URL for all projects or a specific one.
 func getProjectsURL(cs config.Settings, id string) *api.URL {
 	u := &api.URL{Settings: cs, URL: url.URL{Scheme: cs.Scheme}}
 

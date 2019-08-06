@@ -10,21 +10,21 @@ import (
 	"github.com/iron-io/iron_go3/config"
 )
 
-const DataSourceProjectsFilterKey = "filter"
-const DataSourceProjectsIdsKey = "ids"
-const DataSourceProjectsNameKey = "name"
-const DataSourceProjectsNamesKey = "names"
+const dataSourceProjectsFilterKey = "filter"
+const dataSourceProjectsIdsKey = "ids"
+const dataSourceProjectsNameKey = "name"
+const dataSourceProjectsNamesKey = "names"
 
-// dataSourceProjects() retrieves information about projects.
+// dataSourceProjects retrieves information about projects.
 func dataSourceProjects() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			DataSourceProjectsFilterKey: &schema.Schema{
+			dataSourceProjectsFilterKey: &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						DataSourceProjectsNameKey: &schema.Schema{
+						dataSourceProjectsNameKey: &schema.Schema{
 							Type:        schema.TypeString,
 							Optional:    true,
 							Default:     "",
@@ -35,12 +35,12 @@ func dataSourceProjects() *schema.Resource {
 				},
 				MaxItems: 1,
 			},
-			DataSourceProjectsIdsKey: &schema.Schema{
+			dataSourceProjectsIdsKey: &schema.Schema{
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
-			DataSourceProjectsNamesKey: &schema.Schema{
+			dataSourceProjectsNamesKey: &schema.Schema{
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
@@ -58,13 +58,13 @@ func dataSourceProjectsRead(d *schema.ResourceData, m interface{}) error {
 	clientSettingsAuth.UseSettings(&clientSettings.Auth)
 
 	// Prepare the filters.
-	filter := d.Get(DataSourceProjectsFilterKey).([]interface{})
+	filter := d.Get(dataSourceProjectsFilterKey).([]interface{})
 	filterName := ""
 	filterNameMode := 0
 
 	if len(filter) > 0 {
 		filterData := filter[0].(map[string]interface{})
-		filterName = filterData[DataSourceProjectsNameKey].(string)
+		filterName = filterData[dataSourceProjectsNameKey].(string)
 
 		if filterName != "" {
 			if len(filterName) >= 2 && strings.HasPrefix(filterName, "*") && strings.HasSuffix(filterName, "*") {
@@ -123,8 +123,8 @@ func dataSourceProjectsRead(d *schema.ResourceData, m interface{}) error {
 	h.Write([]byte(strings.Join(ids, ",")))
 
 	d.SetId(fmt.Sprintf("%x", h.Sum(nil)))
-	d.Set(DataSourceProjectsIdsKey, ids)
-	d.Set(DataSourceProjectsNamesKey, names)
+	d.Set(dataSourceProjectsIdsKey, ids)
+	d.Set(dataSourceProjectsNamesKey, names)
 
 	return nil
 }

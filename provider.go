@@ -10,23 +10,15 @@ import (
 	"github.com/iron-io/iron_go3/config"
 )
 
-const ProviderConfigurationAuthKey = "auth"
-const ProviderConfigurationCacheKey = "cache"
-const ProviderConfigurationHostKey = "host"
-const ProviderConfigurationLoadConfigFileKey = "load_config_file"
-const ProviderConfigurationMQKey = "mq"
-const ProviderConfigurationPortKey = "port"
-const ProviderConfigurationProtocolKey = "protocol"
-const ProviderConfigurationTokenKey = "token"
-const ProviderConfigurationWorkerKey = "worker"
-
-// ClientSettings contains the settings for each Iron.io product.
-type ClientSettings struct {
-	Auth   config.Settings
-	Cache  config.Settings
-	MQ     config.Settings
-	Worker config.Settings
-}
+const providerConfigurationAuthKey = "auth"
+const providerConfigurationCacheKey = "cache"
+const providerConfigurationHostKey = "host"
+const providerConfigurationLoadConfigFileKey = "load_config_file"
+const providerConfigurationMQKey = "mq"
+const providerConfigurationPortKey = "port"
+const providerConfigurationProtocolKey = "protocol"
+const providerConfigurationTokenKey = "token"
+const providerConfigurationWorkerKey = "worker"
 
 // Provider returns the object for this provider.
 func Provider() *schema.Provider {
@@ -44,30 +36,30 @@ func Provider() *schema.Provider {
 			"ironio_push_queue": resourcePushQueue(),
 		},
 		Schema: map[string]*schema.Schema{
-			ProviderConfigurationAuthKey: &schema.Schema{
+			providerConfigurationAuthKey: &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						ProviderConfigurationHostKey: {
+						providerConfigurationHostKey: {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Default:     "",
 							Description: "The IronAuth hostname or IP address",
 						},
-						ProviderConfigurationPortKey: {
+						providerConfigurationPortKey: {
 							Type:        schema.TypeInt,
 							Optional:    true,
 							Default:     0,
 							Description: "The IronAuth port number",
 						},
-						ProviderConfigurationProtocolKey: {
+						providerConfigurationProtocolKey: {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Default:     "",
 							Description: "The IronAuth protocol (HTTP or HTTPS)",
 						},
-						ProviderConfigurationTokenKey: {
+						providerConfigurationTokenKey: {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Default:     "",
@@ -77,24 +69,24 @@ func Provider() *schema.Provider {
 				},
 				MaxItems: 1,
 			},
-			ProviderConfigurationCacheKey: &schema.Schema{
+			providerConfigurationCacheKey: &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						ProviderConfigurationHostKey: {
+						providerConfigurationHostKey: {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Default:     "",
 							Description: "The IronCache hostname or IP address",
 						},
-						ProviderConfigurationPortKey: {
+						providerConfigurationPortKey: {
 							Type:        schema.TypeInt,
 							Optional:    true,
 							Default:     0,
 							Description: "The IronCache port number",
 						},
-						ProviderConfigurationProtocolKey: {
+						providerConfigurationProtocolKey: {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Default:     "",
@@ -104,30 +96,30 @@ func Provider() *schema.Provider {
 				},
 				MaxItems: 1,
 			},
-			ProviderConfigurationLoadConfigFileKey: {
+			providerConfigurationLoadConfigFileKey: {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
 				Description: "Whether to load the iron.json configuration file",
 			},
-			ProviderConfigurationMQKey: &schema.Schema{
+			providerConfigurationMQKey: &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						ProviderConfigurationHostKey: {
+						providerConfigurationHostKey: {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Default:     "",
 							Description: "The IronMQ hostname or IP address",
 						},
-						ProviderConfigurationPortKey: {
+						providerConfigurationPortKey: {
 							Type:        schema.TypeInt,
 							Optional:    true,
 							Default:     0,
 							Description: "The IronMQ port number",
 						},
-						ProviderConfigurationProtocolKey: {
+						providerConfigurationProtocolKey: {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Default:     "",
@@ -137,24 +129,24 @@ func Provider() *schema.Provider {
 				},
 				MaxItems: 1,
 			},
-			ProviderConfigurationWorkerKey: &schema.Schema{
+			providerConfigurationWorkerKey: &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						ProviderConfigurationHostKey: {
+						providerConfigurationHostKey: {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Default:     "",
 							Description: "The IronWorker hostname or IP address",
 						},
-						ProviderConfigurationPortKey: {
+						providerConfigurationPortKey: {
 							Type:        schema.TypeInt,
 							Optional:    true,
 							Default:     0,
 							Description: "The IronWorker port number",
 						},
-						ProviderConfigurationProtocolKey: {
+						providerConfigurationProtocolKey: {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Default:     "",
@@ -185,7 +177,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			),
 		},
 	}
-	loadConfigFile := d.Get(ProviderConfigurationLoadConfigFileKey).(bool)
+	loadConfigFile := d.Get(providerConfigurationLoadConfigFileKey).(bool)
 
 	if loadConfigFile {
 		// Use the settings stored in the configuration file or the environment variables.
@@ -209,14 +201,14 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	clientSettings.Worker.UserAgent = clientSettings.Auth.UserAgent
 
 	// Modify the authentication settings based on the configuration values.
-	auth := d.Get(ProviderConfigurationAuthKey).([]interface{})
+	auth := d.Get(providerConfigurationAuthKey).([]interface{})
 
 	if len(auth) > 0 {
 		authInfo := auth[0].(map[string]interface{})
-		authHost := authInfo[ProviderConfigurationHostKey].(string)
-		authPort := uint16(authInfo[ProviderConfigurationPortKey].(int))
-		authProtocol := authInfo[ProviderConfigurationProtocolKey].(string)
-		authToken := authInfo[ProviderConfigurationTokenKey].(string)
+		authHost := authInfo[providerConfigurationHostKey].(string)
+		authPort := uint16(authInfo[providerConfigurationPortKey].(int))
+		authProtocol := authInfo[providerConfigurationProtocolKey].(string)
+		authToken := authInfo[providerConfigurationTokenKey].(string)
 
 		if authHost != "" {
 			clientSettings.Auth.Host = authHost
@@ -239,13 +231,13 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	}
 
 	// Modify the cache settings based on the configuration values.
-	cache := d.Get(ProviderConfigurationCacheKey).([]interface{})
+	cache := d.Get(providerConfigurationCacheKey).([]interface{})
 
 	if len(cache) > 0 {
 		cacheInfo := cache[0].(map[string]interface{})
-		cacheHost := cacheInfo[ProviderConfigurationHostKey].(string)
-		cachePort := uint16(cacheInfo[ProviderConfigurationPortKey].(int))
-		cacheProtocol := cacheInfo[ProviderConfigurationProtocolKey].(string)
+		cacheHost := cacheInfo[providerConfigurationHostKey].(string)
+		cachePort := uint16(cacheInfo[providerConfigurationPortKey].(int))
+		cacheProtocol := cacheInfo[providerConfigurationProtocolKey].(string)
 
 		if cacheHost != "" {
 			clientSettings.Cache.Host = cacheHost
@@ -261,13 +253,13 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	}
 
 	// Modify the MQ settings based on the configuration values.
-	mq := d.Get(ProviderConfigurationMQKey).([]interface{})
+	mq := d.Get(providerConfigurationMQKey).([]interface{})
 
 	if len(mq) > 0 {
 		mqInfo := mq[0].(map[string]interface{})
-		mqHost := mqInfo[ProviderConfigurationHostKey].(string)
-		mqPort := uint16(mqInfo[ProviderConfigurationPortKey].(int))
-		mqProtocol := mqInfo[ProviderConfigurationProtocolKey].(string)
+		mqHost := mqInfo[providerConfigurationHostKey].(string)
+		mqPort := uint16(mqInfo[providerConfigurationPortKey].(int))
+		mqProtocol := mqInfo[providerConfigurationProtocolKey].(string)
 
 		if mqHost != "" {
 			clientSettings.MQ.Host = mqHost
@@ -283,13 +275,13 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	}
 
 	// Modify the worker settings based on the configuration values.
-	worker := d.Get(ProviderConfigurationWorkerKey).([]interface{})
+	worker := d.Get(providerConfigurationWorkerKey).([]interface{})
 
 	if len(worker) > 0 {
 		workerInfo := worker[0].(map[string]interface{})
-		workerHost := workerInfo[ProviderConfigurationHostKey].(string)
-		workerPort := uint16(workerInfo[ProviderConfigurationPortKey].(int))
-		workerProtocol := workerInfo[ProviderConfigurationProtocolKey].(string)
+		workerHost := workerInfo[providerConfigurationHostKey].(string)
+		workerPort := uint16(workerInfo[providerConfigurationPortKey].(int))
+		workerProtocol := workerInfo[providerConfigurationProtocolKey].(string)
 
 		if workerHost != "" {
 			clientSettings.Worker.Host = workerHost
