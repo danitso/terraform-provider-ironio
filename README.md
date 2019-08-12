@@ -3,12 +3,12 @@ A Terraform Provider to manage IronAuth, IronCache, IronMQ and IronWorker resour
 
 *Support is currently limited to IronAuth and IronMQ.*
 
-# Requirements
+## Requirements
 
 - [Terraform](https://www.terraform.io/downloads.html) 0.11+
 - [Go](https://golang.org/doc/install) 1.12 (to build the provider plugin)
 
-# Building the Provider
+## Building the Provider
 Clone repository to: `$GOPATH/src/github.com/danitso/terraform-provider-ironio`
 
 ```sh
@@ -24,12 +24,12 @@ $ make init
 $ make build
 ```
 
-# Using the Provider
+## Using the Provider
 If you're building the provider, follow the instructions to [install it as a plugin.](https://www.terraform.io/docs/plugins/basics.html#installing-plugins) After placing it into your plugins directory,  run `terraform init` to initialize it.
 
-## Configuration
+### Configuration
 
-### Arguments
+#### Arguments
 
 * `auth` - (Optional) This is the IronAuth configuration block
     * `host` - (Optional) This is the address of the IronAuth service. Defaults to `auth.iron.io`.
@@ -50,28 +50,28 @@ If you're building the provider, follow the instructions to [install it as a plu
     * `port` - (Optional) This is the port number for the IronWorker service. Defaults to `443`.
     * `protocol` - (Optional) This is the protocol to use for IronWorker requests. Defaults to `https`.
 
-## Data Sources
+### Data Sources
 
-### Pull Queue (ironio_pull_queue)
+#### Pull Queue (ironio_pull_queue)
 
-#### Arguments
+##### Arguments
 
 * `name` - (Required) This is the name of the queue.
 * `project_id` - (Required) This is the id of the project to add the queue to.
 
-#### Attributes
+##### Attributes
 
 * `message_count` - This is the number of messages currently in the queue.
 * `message_count_total` - This is the number of messages which have been processed by the queue.
 
-### Push Queue (ironio_push_queue)
+#### Push Queue (ironio_push_queue)
 
-#### Arguments
+##### Arguments
 
 * `name` - (Required) This is the name of the queue.
 * `project_id` - (Required) This is the id of the project to add the queue to.
 
-#### Attributes
+##### Attributes
 
 * `error_queue` - This is the name of an error queue.
 * `message_count` - This is the number of messages currently in the queue.
@@ -84,21 +84,21 @@ If you're building the provider, follow the instructions to [install it as a plu
     * `name` - This is the name of the subscriber.
     * `url` - This is the URL for the subscriber.
 
-### Projects (ironio_projects)
+#### Projects (ironio_projects)
 
-#### Arguments
+##### Arguments
 
 * `filter` - (Optional) This is the filter block.
     * `name` - (Optional) This is the name filter. You can either do an exact match, a prefix match (`prefix*`), a suffix match (`*suffix`) or a wildcard match (`*wildcard*`).
 
-#### Attributes
+##### Attributes
 
 * `ids` - This is the list of project ids.
 * `names` - This is the list of project names.
 
-### Queues (ironio_queues)
+#### Queues (ironio_queues)
 
-#### Arguments
+##### Arguments
 
 * `filter` - (Optional) This is the filter block.
     * `name` - (Optional) This is the name filter. You can either do an exact match, a prefix match (`prefix*`), a suffix match (`*suffix`) or a wildcard match (`*wildcard*`).
@@ -106,34 +106,34 @@ If you're building the provider, follow the instructions to [install it as a plu
     * `push` - (Optional) Whether to include push queues in the result.
 * `project_id` - (Required) This is the id of the project to retrieve the queues from.
 
-#### Attributes
+##### Attributes
 
 * `names` - This is the list of queue names.
 * `types` - This is the list of queue types (`pull` or `push`).
 
-## Resources
+### Resources
 
-### Project (ironio_project)
+#### Project (ironio_project)
 
-#### Arguments
+##### Arguments
 
 * `name` - (Required) This is the name of the project.
 
-### Pull Queue (ironio_pull_queue)
+#### Pull Queue (ironio_pull_queue)
 
-#### Arguments
+##### Arguments
 
 * `name` - (Required) This is the name of the queue.
 * `project_id` - (Required) This is the id of the project to add the queue to.
 
-#### Attributes
+##### Attributes
 
 * `message_count` - This is the number of messages currently in the queue.
 * `message_count_total` - This is the number of messages which have been processed by the queue.
 
-### Push Queue (ironio_push_queue)
+#### Push Queue (ironio_push_queue)
 
-#### Arguments
+##### Arguments
 
 * `error_queue` - (Optional) This is the name of an error queue.
 * `multicast` - (Optional) Whether to create a multicast queue instead of a unicast queue. Defaults to `true`.
@@ -146,12 +146,12 @@ If you're building the provider, follow the instructions to [install it as a plu
     * `name` - (Optional) This is the name of the subscriber. Defaults to an empty string.
     * `url` - (Required) This is the URL for the subscriber.
 
-#### Attributes
+##### Attributes
 
 * `message_count` - This is the number of messages currently in the queue.
 * `message_count_total` - This is the number of messages which have been processed by the queue.
 
-# Developing the Provider
+## Developing the Provider
 If you wish to work on the provider, you'll first need [Go](http://www.golang.org) installed on your machine (version 1.12+ is *required*).
 You'll also need to correctly setup a [GOPATH](http://golang.org/doc/code.html#GOPATH), as well as adding `$GOPATH/bin` to your `$PATH`.
 
@@ -170,7 +170,7 @@ If you wish to contribute to the provider, the following requirements must be me
 * The Go code must be formatted using Gofmt
 * Dependencies are installed by `make init`
 
-# Testing the Provider
+## Testing the Provider
 In order to test the provider, you can simply run `make test`.
 
 ```sh
