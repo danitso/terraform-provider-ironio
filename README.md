@@ -1,3 +1,5 @@
+[![Build Status](https://api.travis-ci.com/danitso/terraform-provider-ironio.svg?branch=master)](https://travis-ci.com/danitso/terraform-provider-ironio)
+
 # Terraform Provider for Iron.io
 A Terraform Provider to manage IronAuth, IronCache, IronMQ and IronWorker resources from [Iron.io](https://iron.io/).
 
