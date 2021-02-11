@@ -7,7 +7,7 @@ package ironiotf
 import (
 	"strings"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/iron-io/iron_go3/config"
 	"github.com/iron-io/iron_go3/mq"
 )
@@ -21,23 +21,23 @@ const dataSourcePullQueueProjectIDKey = "project_id"
 func dataSourcePullQueue() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			dataSourcePullQueueMessageCountKey: &schema.Schema{
+			dataSourcePullQueueMessageCountKey: {
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "The number of messages currently in the queue",
 			},
-			dataSourcePullQueueMessageCountTotalKey: &schema.Schema{
+			dataSourcePullQueueMessageCountTotalKey: {
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "The number of messages which have been processed by the queue",
 			},
-			dataSourcePullQueueNameKey: &schema.Schema{
+			dataSourcePullQueueNameKey: {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The name of the queue",
 				ForceNew:    true,
 			},
-			dataSourcePullQueueProjectIDKey: &schema.Schema{
+			dataSourcePullQueueProjectIDKey: {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The project id",

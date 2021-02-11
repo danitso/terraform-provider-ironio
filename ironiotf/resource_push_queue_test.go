@@ -7,7 +7,7 @@ package ironiotf
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 // TestResourcePushQueueInstantiation tests whether the resourcePushQueue instance can be instantiated.

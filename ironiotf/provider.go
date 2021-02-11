@@ -9,8 +9,7 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/hashicorp/terraform/version"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/iron-io/iron_go3/config"
 )
 
@@ -40,7 +39,7 @@ func Provider() *schema.Provider {
 			"ironio_push_queue": resourcePushQueue(),
 		},
 		Schema: map[string]*schema.Schema{
-			providerConfigurationAuthKey: &schema.Schema{
+			providerConfigurationAuthKey: {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
@@ -73,7 +72,7 @@ func Provider() *schema.Provider {
 				},
 				MaxItems: 1,
 			},
-			providerConfigurationCacheKey: &schema.Schema{
+			providerConfigurationCacheKey: {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
@@ -106,7 +105,7 @@ func Provider() *schema.Provider {
 				Default:     false,
 				Description: "Whether to load the iron.json configuration file",
 			},
-			providerConfigurationMQKey: &schema.Schema{
+			providerConfigurationMQKey: {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
@@ -133,7 +132,7 @@ func Provider() *schema.Provider {
 				},
 				MaxItems: 1,
 			},
-			providerConfigurationWorkerKey: &schema.Schema{
+			providerConfigurationWorkerKey: {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
@@ -173,11 +172,10 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			ApiVersion: "1",
 			Host:       "auth.iron.io",
 			UserAgent: fmt.Sprintf(
-				"%s/%s Go/%s Terraform-Library/%s",
+				"%s/%s Go/%s",
 				TerraformProviderName,
 				TerraformProviderVersion,
 				runtime.Version(),
-				version.Version,
 			),
 		},
 	}

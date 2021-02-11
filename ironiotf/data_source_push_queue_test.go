@@ -7,7 +7,7 @@ package ironiotf
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 // TestDataSourcePushQueueInstantiation tests whether the dataSourcePushQueue instance can be instantiated.

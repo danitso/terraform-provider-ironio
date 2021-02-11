@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/iron-io/iron_go3/config"
 )
 
@@ -19,7 +19,7 @@ const resourceProjectNameKey = "name"
 func resourceProject() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			resourceProjectNameKey: &schema.Schema{
+			resourceProjectNameKey: {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The name of the project",

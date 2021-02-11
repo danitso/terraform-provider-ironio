@@ -7,7 +7,7 @@ package ironiotf
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 // TestProviderInstantiation tests whether the Provider instance can be instantiated.

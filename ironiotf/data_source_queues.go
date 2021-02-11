@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/iron-io/iron_go3/config"
 	"github.com/iron-io/iron_go3/mq"
 )
@@ -27,26 +27,26 @@ const dataSourceQueuesTypesKey = "types"
 func dataSourceQueues() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			dataSourceQueuesFilterKey: &schema.Schema{
+			dataSourceQueuesFilterKey: {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						dataSourceQueuesNameKey: &schema.Schema{
+						dataSourceQueuesNameKey: {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Default:     "",
 							Description: "The name filter",
 							ForceNew:    true,
 						},
-						dataSourceQueuesPullKey: &schema.Schema{
+						dataSourceQueuesPullKey: {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     true,
 							Description: "Whether to include pull queues",
 							ForceNew:    true,
 						},
-						dataSourceQueuesPushKey: &schema.Schema{
+						dataSourceQueuesPushKey: {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     true,
@@ -57,18 +57,18 @@ func dataSourceQueues() *schema.Resource {
 				},
 				MaxItems: 1,
 			},
-			dataSourceQueuesNamesKey: &schema.Schema{
+			dataSourceQueuesNamesKey: {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
-			dataSourceQueuesProjectIDKey: &schema.Schema{
+			dataSourceQueuesProjectIDKey: {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The project id",
 				ForceNew:    true,
 			},
-			dataSourceQueuesTypesKey: &schema.Schema{
+			dataSourceQueuesTypesKey: {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
@@ -104,7 +104,7 @@ func dataSourceQueuesRead(d *schema.ResourceData, m interface{}) error {
 				filterName = filterName[1 : len(filterName)-1]
 				filterNameMode = 1
 			} else if strings.HasPrefix(filterName, "*") {
-				filterName = filterName[1:len(filterName)]
+				filterName = filterName[1:]
 				filterNameMode = 2
 			} else if strings.HasSuffix(filterName, "*") {
 				filterName = filterName[0 : len(filterName)-1]

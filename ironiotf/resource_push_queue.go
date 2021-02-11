@@ -7,7 +7,7 @@ package ironiotf
 import (
 	"strings"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/iron-io/iron_go3/config"
 	"github.com/iron-io/iron_go3/mq"
 )
@@ -28,54 +28,54 @@ const resourcePushQueueURLKey = "url"
 func resourcePushQueue() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			resourcePushQueueErrorQueueKey: &schema.Schema{
+			resourcePushQueueErrorQueueKey: {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The name of an error queue",
 				Default:     "",
 			},
-			resourcePushQueueMessageCountKey: &schema.Schema{
+			resourcePushQueueMessageCountKey: {
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "The number of messages currently in the queue",
 			},
-			resourcePushQueueMessageCountTotalKey: &schema.Schema{
+			resourcePushQueueMessageCountTotalKey: {
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "The number of messages which have been processed by the queue",
 			},
-			resourcePushQueueMulticastKey: &schema.Schema{
+			resourcePushQueueMulticastKey: {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Whether to create a multicast push queue",
 				ForceNew:    true,
 				Default:     true,
 			},
-			resourcePushQueueNameKey: &schema.Schema{
+			resourcePushQueueNameKey: {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The name of the queue",
 				ForceNew:    true,
 			},
-			resourcePushQueueProjectIDKey: &schema.Schema{
+			resourcePushQueueProjectIDKey: {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The project id",
 				ForceNew:    true,
 			},
-			resourcePushQueueRetriesKey: &schema.Schema{
+			resourcePushQueueRetriesKey: {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Description: "The number of retries before moving on to the next message",
 				Default:     3,
 			},
-			resourcePushQueueRetriesDelayKey: &schema.Schema{
+			resourcePushQueueRetriesDelayKey: {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Description: "The number of seconds to wait before re-sending a failed message",
 				Default:     60,
 			},
-			resourcePushQueueSubscriberKey: &schema.Schema{
+			resourcePushQueueSubscriberKey: {
 				Type:     schema.TypeList,
 				Required: true,
 				Elem: &schema.Resource{

@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/iron-io/iron_go3/config"
 )
 
@@ -23,12 +23,12 @@ const dataSourceProjectsNamesKey = "names"
 func dataSourceProjects() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			dataSourceProjectsFilterKey: &schema.Schema{
+			dataSourceProjectsFilterKey: {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						dataSourceProjectsNameKey: &schema.Schema{
+						dataSourceProjectsNameKey: {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Default:     "",
@@ -39,12 +39,12 @@ func dataSourceProjects() *schema.Resource {
 				},
 				MaxItems: 1,
 			},
-			dataSourceProjectsIdsKey: &schema.Schema{
+			dataSourceProjectsIdsKey: {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
-			dataSourceProjectsNamesKey: &schema.Schema{
+			dataSourceProjectsNamesKey: {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
@@ -75,7 +75,7 @@ func dataSourceProjectsRead(d *schema.ResourceData, m interface{}) error {
 				filterName = filterName[1 : len(filterName)-1]
 				filterNameMode = 1
 			} else if strings.HasPrefix(filterName, "*") {
-				filterName = filterName[1:len(filterName)]
+				filterName = filterName[1:]
 				filterNameMode = 2
 			} else if strings.HasSuffix(filterName, "*") {
 				filterName = filterName[0 : len(filterName)-1]
